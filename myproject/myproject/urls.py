@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import BookAppointmentView, ProcessPaymentView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/auth/', include('authentication.urls')),
+    path('auth/', include('authentication.urls')),
+    path('book-appointment/', BookAppointmentView.as_view(), name="book_appointment"),
+    path('payment/', ProcessPaymentView.as_view(), name="process_payment"),
 ]

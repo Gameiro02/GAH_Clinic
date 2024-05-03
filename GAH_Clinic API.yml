@@ -1,0 +1,151 @@
+openapi: '3.0.2'
+info:
+  title: GAH_Clinic API
+  version: '1.0'
+servers:
+  - url: http://127.0.0.1:8000/
+paths:
+  /admin/:
+    get:
+      summary: Goes to the admin dashboard
+      description: This endpoints allows you to go to the django admin dashboard.
+      responses:
+        '200':
+          description: OK
+  /auth/login/:
+    post:
+      summary: Obtain JWT token
+      description: This endpoint allows users to obtain a JWT token by providing valid credentials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username of the user.
+                  example: userTeste
+                password:
+                  type: string
+                  description: The password of the user.
+                  example: lol123
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: JWT token obtained successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh:
+                    type: string
+                    description: The refresh token (JWT) used to obtain new access tokens.
+                  access:
+                    type: string
+                    description: The access token (JWT) used for authentication.
+                  user:
+                    type: string
+                    description: The username of the user
+        '400':
+          description: Bad request, invalid input 
+        '401':
+          description: Unauthorized, incorrect username or password
+  /book-appointment/:
+    post:
+      summary: Book an appointment
+      description: This endpoint allows a user to book an appointment with a doctor based on a specialty, doctor, date.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                specialty:
+                  type: string
+                  description: The specialty of the doctor required for the appointment.
+                  example: "Dermatology"
+                doctorId:
+                  type: integer
+                  description: The identifier for the doctor with whom the appointment is to be booked.
+                  example: 1
+                date:
+                  type: string
+                  format: date-time
+                  description: The date and time when the appointment is scheduled.
+                  example: "2024-04-20T15:00:00Z"
+      responses:
+        '201':
+          description: Appointment booked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  appointment_id:
+                    type: integer
+                    description: The unique identifier of the booked appointment.
+                    example: 1234
+                  message:
+                    type: string
+                    description: A message confirming the successful booking of the appointment.
+                    example: "Appointment booked successfully."
+        '400':
+          description: Bad request, invalid input data
+        '401':
+          description: Unauthorized, token missing or invalid
+        '500':
+          description: Internal Server Error
+  /payment/:
+    post:
+      summary: Process payment for a booked appointment
+      description: This endpoint processess payments for appointments and must be completed within 30 minutes of booking.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                appointment_id:
+                  type: string
+                  description: The identifier of the booked appointment.
+                  example: uniqueId1
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the payment process.
+                    example: "Success"
+                  message:
+                    type: string
+                    description: A message detailing the result of the payment operation.
+                    example: "Payment has been processed successfully."
+        '400':
+          description: Invalid payment details provided
+        '401':
+          description: Unauthorized, token missing or invalid
+        '500':
+          description: Internal Server Error
+                    
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
