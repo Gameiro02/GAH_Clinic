@@ -44,8 +44,10 @@
     >
     <!-- <a href="/" on:click={(event) => handlePaymentsClick(event)}>Pagamentos</a> -->
     <a href="/" on:click={(event) => handleSupportClick(event)}>Suporte</a>
-    <a href="/" on:click={handleSettingsClick}>Configurações</a>
-    <button on:click={handleLogout}>Logout</button>
+    <a href="/" on:click={(event) => handleSettingsClick(event)}
+      >Configurações</a
+    >
+    <button on:click={(event) => handleLogout(event)}>Logout</button>
   </div>
 </nav>
 
