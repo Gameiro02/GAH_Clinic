@@ -78,9 +78,14 @@ paths:
                   example: 1
                 date:
                   type: string
-                  format: date-time
-                  description: The date and time when the appointment is scheduled.
-                  example: "2024-04-20T15:00:00Z"
+                  format: date
+                  description: The date when the appointment is scheduled.
+                  example: "2024-04-20"
+                time:
+                  type: string
+                  format: time
+                  description: The time when the appointment starts, must be on the hour (e.g., 14:00).
+                  example: "15:00:00"
       responses:
         '201':
           description: Appointment booked successfully
@@ -101,8 +106,32 @@ paths:
           description: Bad request, invalid input data
         '401':
           description: Unauthorized, token missing or invalid
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "No record found for the specified doctorId. Please check the doctorId and try again."
+                    example: "Doctor does not exist."
+        '409':
+          description: Conflict, an appointment already exists at this date and time
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating a conflict with an existing appointment.
+                    example: "An appointment already exists at this date and time."
         '500':
           description: Internal Server Error
+        '503':
+          description: Service Unavailable
   /payment/:
     post:
       summary: Process payment for a booked appointment
@@ -140,6 +169,47 @@ paths:
           description: Invalid payment details provided
         '401':
           description: Unauthorized, token missing or invalid
+        '500':
+          description: Internal Server Error
+  /appointments/{appointment_id}/status:
+    get:
+      summary: Retrieve the status of an appointment
+      description: This endpoint allows a user to retrieve the current status of a specific appointment by providing the appointment's unique identifier.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: appointment_id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the appointment for which to retrieve the status.
+      responses:
+        '200':
+          description: successfully retrieved the status of the appointment.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  appointment_id:
+                    type: string
+                    description: The unique identifier of the appointment.
+                    example: "abc123"
+                  status:
+                    type: string
+                    description: The current status of the appointment.
+                    example: "waiting for payment"
+                    enum:
+                      - waiting for payment
+                      - scheduled
+                      - finished
+        '400':
+          description: Bad request, invalid appointment ID
+        '401':
+          description: Unauthorized, token missing or invalid
+        '404':
+          description: Not found, appointment not found
         '500':
           description: Internal Server Error
                     
