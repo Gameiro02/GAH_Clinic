@@ -8,10 +8,10 @@
     border: 1px solid #d3d3d5;
     color: #333;
     border-radius: 5px;
-    padding: 25px 25px;
-    margin: 15px;
+    padding: 10px 25px;
+    margin: 13px;
     position: relative;
-    max-width: 400px;
-    max-height: 400px;
+    max-width: 455px;
+    max-height: 455px;
   }
 </style>

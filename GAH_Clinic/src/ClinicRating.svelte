@@ -28,6 +28,7 @@
       {/each}
     </div>
     <span class="average">{averageRating.toFixed(1)}</span>
+    &nbsp;
     <span class="total">({totalRatings} avaliações)</span>
   </div>
 </Card>
