@@ -4,11 +4,9 @@
   import Payment from "./Payment.svelte";
   import Navbar from "./Navbar.svelte";
   import Calendar from "./Calendar.svelte";
+  import PaymentPage from "./PaymentPage.svelte";
 </script>
 
 <main>
-  <Navbar />
-  <Login />
-  <ScheduleAppointment />
-  <Payment />
+  <PaymentPage />
 </main>
