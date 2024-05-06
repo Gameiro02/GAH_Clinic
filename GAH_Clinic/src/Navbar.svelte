@@ -43,10 +43,10 @@
       >Minhas Consultas</a
     >
     <!-- <a href="/" on:click={(event) => handlePaymentsClick(event)}>Pagamentos</a> -->
-    <a href="/" on:click={(event) => handleSupportClick(event)}>Suporte</a>
     <a href="/" on:click={(event) => handleSettingsClick(event)}
       >Configurações</a
     >
+    <a href="/" on:click={(event) => handleSupportClick(event)}>Suporte</a>
     <button on:click={(event) => handleLogout(event)}>Logout</button>
   </div>
 </nav>
@@ -67,6 +67,7 @@
     font-family: sans-serif;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 60px;
+    max-width: 100%;
   }
 
   .logo-img {
@@ -85,7 +86,7 @@
     cursor: pointer;
     font-size: 1rem;
     padding: 0.5rem;
-    border-radius: 5px; /* Alinhado com a estética do botão do calendário */
+    border-radius: 5px;
   }
 
   .navbar .menu button {

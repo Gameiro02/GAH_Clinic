@@ -7,14 +7,14 @@ function getCalendarDaysWith35Spaces(monthNumber, year) {
 
     // 2. Get the day of the week (0 for Sunday, 6 for Saturday)
     const firstDay = date.getDay();
-    console.log('firstDay:', firstDay);
+    // console.log('firstDay:', firstDay);
 
     // 3. Get the total number of days in the month
     const daysInMonth = new Date(year, month, 0).getDate();
 
     // 4. Calculate the total number of empty days needed at the start
     const emptyDays = firstDay % 7;
-    console.log('emptyDays:', emptyDays);
+    // console.log('emptyDays:', emptyDays);
 
     // 5. Clear the array with 35 empty spaces
     let calendarDays = Array(35).fill(null);
