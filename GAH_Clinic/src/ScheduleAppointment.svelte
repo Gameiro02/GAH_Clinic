@@ -12,14 +12,14 @@
 
                 // Get date and time from the form
                 const specialty = selectedSpecialty;
-                const doctor = selectedDoctor;
+                const doctorId = parseInt(selectedDoctor);
                 const date = new Date(selectedDate).toISOString().slice(0, 10);  // Gets 'YYYY-MM-DD'
                 const timeParts = selectedTime.split(':');
                 const time = timeParts.length === 2 ? `${selectedTime}:00` : selectedTime;  // Ensures 'HH:mm:ss'
                 
                 const requestData = JSON.stringify({
                     specialty,
-                    doctor,
+                    doctorId,
                     date,
                     time
                 });
