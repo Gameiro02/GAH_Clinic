@@ -1,8 +1,8 @@
 <script>
-    import Card from './Card.svelte';
-    import { appointmentsData } from './store.js'; 
+  import Card from "./Card.svelte";
+  import { appointmentsData } from "./store.js";
 
-    $: data = $appointmentsData;
+  $: data = $appointmentsData;
 </script>
 
 <Card>
@@ -47,14 +47,14 @@
   .appointments {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: center; /* Centraliza horizontalmente */
+    justify-content: center; /* Centraliza verticalmente quando necessário */
     gap: 10px;
     min-height: 200px;
-    width: 100%; /* Full width of the container */
-    margin: 20px auto; /* Adds margin on both sides */
-    padding: 0 10px; /* Adds padding on both sides */
-    box-sizing: border-box; /* Ensures padding is included in width */
+    width: 100%;
+    margin: 20px auto;
+    padding: 0 10px;
+    box-sizing: border-box;
   }
 
   .appointment {
@@ -68,7 +68,7 @@
   }
 
   .spinner {
-    border: 4px solid rgba(0,0,0,0.1);
+    border: 4px solid rgba(0, 0, 0, 0.1);
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -77,11 +77,16 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
-  .error, .info {
+  .error,
+  .info {
     text-align: center;
     padding: 20px;
     width: 100%; /* Ensures error and info texts span the full width of their container */

@@ -40,6 +40,8 @@
     padding: 10px;
     width: 500px;
     text-align: left;
-    box-sizing: border-box; /* Garante que o padding não afete o tamanho total */
+    box-sizing: border-box;
+    /* align-items: center;
+    justify-content: center; */
   }
 </style>

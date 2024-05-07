@@ -50,7 +50,7 @@
           data.pastAppointments = result.appointments.filter(
             (app) => app.status === "finished"
           );
-          data.isLoading = false;
+          data.isLoading = true;
           data.errorMessage = "";
           return data;
         });
@@ -60,7 +60,7 @@
     } catch (error) {
       console.error(error.message);
       appointmentsData.update((data) => {
-        data.isLoading = false;
+        data.isLoading = true;
         data.errorMessage = error.message;
         return data;
       });
