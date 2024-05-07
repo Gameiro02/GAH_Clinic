@@ -9,7 +9,9 @@
   <h2>Próximas Consultas</h2>
   <div class="appointments">
     {#if data.isLoading}
-      <div class="spinner"></div>
+      <div class="spinner-container">
+        <div class="spinner"></div>
+      </div>
     {:else if data.errorMessage}
       <p class="error">{data.errorMessage}</p>
     {:else if data.upcomingAppointments.length === 0}
@@ -28,7 +30,9 @@
   <h2>Histórico de Consultas</h2>
   <div class="appointments">
     {#if data.isLoading}
-      <div class="spinner"></div>
+      <div class="spinner-container">
+        <div class="spinner"></div>
+      </div>
     {:else if data.errorMessage}
       <p class="error">{data.errorMessage}</p>
     {:else if data.pastAppointments.length === 0}
@@ -47,8 +51,7 @@
   .appointments {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza horizontalmente */
-    justify-content: center; /* Centraliza verticalmente quando necessário */
+    align-items: flex-start;
     gap: 10px;
     min-height: 200px;
     width: 100%;
@@ -62,9 +65,18 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
-    width: calc(100% - 10px); /* Adjusts width to account for padding */
+    width: calc(100% - 20px);
     text-align: left;
-    box-sizing: border-box; /* Ensures padding and border are included in width */
+    box-sizing: border-box;
+  }
+
+  .spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
   }
 
   .spinner {
@@ -89,11 +101,11 @@
   .info {
     text-align: center;
     padding: 20px;
-    width: 100%; /* Ensures error and info texts span the full width of their container */
-    color: red; /* Color for error messages */
+    width: 100%; /* Assegura que texto de erro e informação preenchem a largura */
+    color: red; /* Cor para mensagens de erro */
   }
 
   .info {
-    color: #666; /* Less prominent color for informational messages */
+    color: #666; /* Cor menos proeminente para mensagens informativas */
   }
 </style>
