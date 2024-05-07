@@ -51,7 +51,7 @@
   .appointments {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 10px;
     min-height: 200px;
     width: 100%;
