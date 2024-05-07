@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import BookAppointmentView, ProcessPaymentView, AppointmentStatusView
+from .views import BookAppointmentView, ProcessPaymentView, AppointmentStatusView, UserAppointmentsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,4 +23,5 @@ urlpatterns = [
     path('book-appointment/', BookAppointmentView.as_view(), name="book_appointment"),
     path('payment/', ProcessPaymentView.as_view(), name="process_payment"),
     path('appointments/<uuid:appointment_id>/status', AppointmentStatusView.as_view(), name='appointment_status'),
+    path("user/appointments/", UserAppointmentsView.as_view(), name="user_appointments"),
 ]

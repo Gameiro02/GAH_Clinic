@@ -1,4 +1,5 @@
 import boto3
+from boto3.dynamodb.conditions import Key
 from fastapi.responses import JSONResponse
 from botocore.exceptions import ClientError
 import json
@@ -159,6 +160,37 @@ def start_payment_workflow(appointment_id, user_id):
             "success": False,
             "message": f"Failed to start workflow: {str(e)}"
         }
+        
+def get_user_appointments(user_id):
+    dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
+    appointments_table = dynamodb.Table("Appointments")
+    doctors_table = dynamodb.Table("Doctors")
+    try:
+        # Query appointments by user ID
+        appointments_response = appointments_table.query(
+            IndexName="userId-index",
+            KeyConditionExpression=Key("userId").eq(user_id)
+        )
+        appointments = appointments_response.get('Items', [])
+        
+        # Fetch doctor names for each appointment
+        for appointment in appointments:
+            doctor_response = doctors_table.get_item(
+                Key={"doctorId": appointment["doctorId"]}
+            )
+            doctor = doctor_response.get("Item", {})
+            if doctor:
+                appointment["doctorName"] = doctor.get("name", "Unknown Doctor")
+        
+        if appointments:
+            return {"status": "success", "appointments": appointments}
+        else:
+            print("No appointments found")
+            return {"status": "success", "message": "No appointments found", "appointments": []}
+        
+    except Exception as e:
+        print(f"Failed to query items from DynamoDB: {e}")
+        return {"status": "error", "message": str(e)}
         
 def get_appointment_status(appointment_id, user_id):
     dynamodb = boto3.resource("dynamodb", region_name="us-east-1")

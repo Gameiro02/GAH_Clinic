@@ -1,55 +1,63 @@
 <script>
+  import { appointmentsData } from './store.js'; 
+  import Card from "./Card.svelte";
   import {
     getCalendarDaysWith35Spaces,
     getMonthNumber,
     getMonthName,
   } from "./functions_calendar.js";
-  import Card from "./Card.svelte";
 
   let currentDate = new Date();
-
   let month = getMonthName(currentDate.getMonth() + 1);
   let year = currentDate.getFullYear();
   let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  let calendarDays = Array(35).fill(null);
 
+  // Reactive subscription to appointments data
+  $: data = {
+    ...$appointmentsData,
+    appointments: $appointmentsData.upcomingAppointments.concat($appointmentsData.pastAppointments)
+  };
+
+  // Function to populate calendar days
+  function populateCalendarDays(month, year) {
+    let rawDays = getCalendarDaysWith35Spaces(month, year);
+    return rawDays.map(day => {
+      let fullDate = `${year}-${('0' + (getMonthNumber(month))).slice(-2)}-${('0' + day).slice(-2)}`;
+      let appointmentForDay = data.appointments.find(app => app.date === fullDate);
+      return {
+        day,
+        appointment: appointmentForDay ? {...appointmentForDay} : null
+      };
+    });
+  };
+
+  // Reactive declaration to update calendar days
+  $: calendarDays = populateCalendarDays(month, year);
+
+  // Navigation functions
   const handlePrevious = () => {
-    console.log("Going to the previous month (<)");
-
-    // get the month number
     let monthNumber = getMonthNumber(month);
-
-    // if the month is January, then go to December of the previous year
     if (monthNumber === 1) {
       month = "December";
       year--;
     } else {
       month = getMonthName(monthNumber - 1);
     }
-
-    calendarDays = getCalendarDaysWith35Spaces(month, year);
+    // No need to set calendarDays here since it's reactively set by the $: calendarDays declaration
   };
 
   const handleNext = () => {
-    console.log("Going to the next month (>)");
-
-    // get the month number
     let monthNumber = getMonthNumber(month);
-
-    // if the month is December, then go to January of the next year
     if (monthNumber === 12) {
       month = "January";
       year++;
     } else {
       month = getMonthName(monthNumber + 1);
-      console.log(month);
     }
-
-    calendarDays = getCalendarDaysWith35Spaces(month, year);
+    // No need to set calendarDays here since it's reactively set by the $: calendarDays declaration
   };
-
-  calendarDays = getCalendarDaysWith35Spaces(month, year);
 </script>
+
 
 <div class="calendar">
   <Card>
@@ -68,12 +76,10 @@
     </div>
 
     <div class="days">
-      {#each calendarDays as day, i}
-        {#if day >= 24 && i <= 6}
-          <span style="color: lightgray">{day}</span>
-        {:else}
-          <span>{day}</span>
-        {/if}
+      {#each calendarDays as {day, appointment}}
+        <span class={appointment ? 'appointment' : ''} title={appointment ? `${appointment.time} with ${appointment.doctorName}` : ''}>
+          {day}
+        </span>
       {/each}
     </div>
   </Card>
@@ -84,9 +90,8 @@
     background: none;
     border: none;
     height: 30px;
-    width: 25px;
-    cursor: pointer;
     width: 30px;
+    cursor: pointer;
     border-radius: 50%;
     font-size: 25px;
   }
@@ -117,5 +122,11 @@
 
   .days {
     grid-auto-rows: minmax(30px, auto);
+  }
+
+  .appointment {
+    color: #007BFF; /* Blue color for days with appointments */
+    cursor: pointer;
+    font-weight: bold;
   }
 </style>

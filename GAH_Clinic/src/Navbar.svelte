@@ -61,7 +61,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #7fb1b3;
+    background-color: #62B6CB;
     color: #333;
     padding: 0.5rem 1rem;
     font-family: sans-serif;

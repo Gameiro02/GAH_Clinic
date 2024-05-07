@@ -1,11 +1,12 @@
 <script>
   import Calendar from "./Calendar.svelte";
-  // Props passada para o componente, por exemplo, ao usar <WelcomePanel userName="João" />
+  import { navigate } from "svelte-routing";
+
   export let userName;
 
-  // Função para navegar para a página de agendamento
   function goToAppointments() {
-    console.log("Redirecionando para a página de agendamento");
+    console.log('Agendar Consulta');
+    navigate("/schedule-appointment");
   }
 </script>
 
@@ -22,11 +23,11 @@
     border-radius: 5px;
     padding: 20px;
     text-align: center;
-    padding: 25px 25px;
-    margin: 15px;
+    margin: 15px auto;
     margin-top: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 1380px;
+    width: 100%;
   }
 
   .welcome-panel h1 {

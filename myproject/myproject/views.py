@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .utils import aws_services
+from operator import itemgetter
 import uuid
 
 # class BookAppointmentView(APIView):
@@ -146,3 +147,31 @@ class AppointmentStatusView(APIView):
             "appointment_id": result["appointment_id"],
             "status": result["status"]
         }, status=200)
+        
+    
+class UserAppointmentsView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user_id = request.user.id
+        result = aws_services.get_user_appointments(user_id)
+        
+        if result["status"] == "success":
+            if not result["appointments"]:
+                return Response({
+                    "status": "success",
+                    "appointments": []
+                }, status=200)
+            
+            sorted_appointments = sorted(result["appointments"], key=itemgetter("date", "time"))
+            
+            return Response({
+                "status": "success",
+                "appointments": sorted_appointments
+            }, status=200)
+        else:
+            return Response({
+                "status": "error",
+                "message": result.get("message", "Failed to retrieve appointments")
+            }, status=400)
+        
