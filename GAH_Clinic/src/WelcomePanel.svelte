@@ -5,7 +5,7 @@
   export let userName;
 
   function goToAppointments() {
-    console.log('Agendar Consulta');
+    console.log("Agendar Consulta");
     navigate("/schedule-appointment");
   }
 </script>
@@ -18,15 +18,15 @@
 
 <style>
   .welcome-panel {
+    flex: 1;
     background-color: #ebebeb;
     border: 1px solid #d3d3d5;
-    border-radius: 5px;
-    padding: 20px;
+    border-radius: 16px;
+    padding: 1rem;
     text-align: center;
-    margin: 15px auto;
+    margin: 1rem;
     margin-top: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 1380px;
     width: 100%;
   }
 
