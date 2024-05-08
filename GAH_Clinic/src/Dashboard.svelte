@@ -4,6 +4,9 @@
   import WelcomePanel from "./WelcomePanel.svelte";
   import ClinicRating from "./ClinicRating.svelte";
   import Pannel from "./Pannel.svelte";
+  import Empty from "./Cards/Empty.svelte";
+  import AppointmentsPanel from "./Cards/AppointmentsPanel.svelte";
+  import HistoryPanel from "./Cards/HistoryPanel.svelte";
   import { onMount } from "svelte";
   import { appointmentsData } from "./store.js";
 
@@ -70,21 +73,25 @@
   onMount(fetchAppointments);
 </script>
 
-<main>
+<main class="container mx-auto p-4">
   <Navbar />
-  <div class="welcome">
-    <WelcomePanel userName={localStorage.getItem("user")} />
-  </div>
-  <div class="panels">
-    <div>
-      <Calendar />
-      <ClinicRating averageRating={5} totalRatings={100} />
+  <div class="flex flex-col space-y-5">
+    <div class="welcome">
+      <WelcomePanel userName={localStorage.getItem("user")} />
     </div>
-    <Pannel />
+    <div class="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-5">
+      <!-- <div>
+          <Calendar />
+          <ClinicRating averageRating={5} totalRatings={100} />
+        </div> -->
+      <Empty />
+      <AppointmentsPanel />
+      <HistoryPanel />
+    </div>
   </div>
 </main>
 
-<style>
+<!-- <style>
   .welcome {
     display: flex;
     justify-content: center; /* Center the panel horizontally */
@@ -110,4 +117,4 @@
       margin: 10px 0; /* Add margin between panels if needed */
     }
   }
-</style>
+</style> -->

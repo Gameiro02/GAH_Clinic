@@ -5,6 +5,7 @@ import terser from '@rollup/plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import css from 'rollup-plugin-css-only';
+import postcss from 'rollup-plugin-postcss';
 import image from '@rollup/plugin-image'; // Adicione esta linha
 
 const production = !process.env.ROLLUP_WATCH;
@@ -39,6 +40,9 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
+		postcss({
+			extract: true,
+		}),
 		svelte({
 			compilerOptions: {
 				// enable run-time checks when not in production

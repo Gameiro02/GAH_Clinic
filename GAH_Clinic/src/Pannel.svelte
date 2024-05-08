@@ -1,53 +1,114 @@
 <script>
   import Card from "./Card.svelte";
   import { appointmentsData } from "./store.js";
+  import { cardio } from 'ldrs'
+  import Button from "./Button.svelte";
+
+  cardio.register();
 
   $: data = $appointmentsData;
 </script>
 
-<Card>
-  <h2>Próximas Consultas</h2>
-  <div class="appointments">
-    {#if data.isLoading}
-      <div class="spinner-container">
-        <div class="spinner"></div>
-      </div>
-    {:else if data.errorMessage}
-      <p class="error">{data.errorMessage}</p>
-    {:else if data.upcomingAppointments.length === 0}
-      <p class="info">Não tens nenhuma consulta agendada.</p>
-    {:else}
-      {#each data.upcomingAppointments as appointment}
-        <div class="appointment">
-          {appointment.date} às {appointment.time} com {appointment.doctorName}
-        </div>
-      {/each}
-    {/if}
+<div class="card w-96 bg-base-100 shadow-xl">
+  <div class="card-body items-center text-center">
+    <h2 class="card-title text-base-content text-4xl">Empty</h2>
   </div>
-</Card>
+</div>
 
-<Card>
-  <h2>Histórico de Consultas</h2>
-  <div class="appointments">
-    {#if data.isLoading}
-      <div class="spinner-container">
-        <div class="spinner"></div>
-      </div>
-    {:else if data.errorMessage}
-      <p class="error">{data.errorMessage}</p>
-    {:else if data.pastAppointments.length === 0}
-      <p class="info">Não tens nenhuma consulta histórica.</p>
-    {:else}
-      {#each data.pastAppointments as appointment}
-        <div class="appointment">
-          {appointment.date} às {appointment.time} com {appointment.doctorName}
+<div class="card w-96 bg-base-100 shadow-xl">
+  <div class="card-body items-center text-center p-5">
+    <h2 class="card-title text-base-content text-4xl">Próximas Consultas</h2>
+    <div class="appointments">
+      {#if data.isLoading}
+        <div class="spinner-container">
+          <l-cardio
+            size="150"
+            stroke="10"
+            speed="0.7"
+            color="oklch(var(--bc))"
+          ></l-cardio>
         </div>
-      {/each}
-    {/if}
+      {:else if data.errorMessage}
+        <p class="error">{data.errorMessage}</p>
+      {:else if data.upcomingAppointments.length === 0}
+        <p class="info">Não tens nenhuma consulta agendada.</p>
+      {:else}
+        <div class="overflow-x-auto w-full">
+          <table class="table w-full bg-base-200">
+            <thead class="border-b-2 border-base-content text-white">
+              <tr>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Médico</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each data.upcomingAppointments as appointment, index}
+                <tr class="hover:bg-base-300">
+                  <td class="text-base-content">{appointment.date}</td>
+                  <td class="text-base-content">{appointment.time}</td>
+                  <td class="text-base-content">{appointment.doctorName}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/if}
+    </div>
   </div>
-</Card>
+</div>
+
+<div class="card w-96 bg-base-100 shadow-xl">
+  <div class="card-body items-center text-center p-5">
+    <h2 class="card-title text-base-content text-4xl">Histórico de Consultas</h2>
+    <div class="appointments">
+      {#if data.isLoading}
+        <div class="spinner-container">
+          <l-cardio
+            size="150"
+            stroke="10"
+            speed="0.7"
+            color="oklch(var(--bc))"
+          ></l-cardio>
+        </div>
+      {:else if data.errorMessage}
+        <p class="error">{data.errorMessage}</p>
+      {:else if data.pastAppointments.length === 0}
+        <p class="info">Não tens nenhuma consulta histórica.</p>
+      {:else}
+        <div class="overflow-x-auto w-full">
+          <table class="table w-full bg-base-200">
+            <thead class="border-b-2 border-base-content text-white">
+              <tr>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Médico</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each data.pastAppointments as appointment, index}
+                <tr class="hover:bg-base-300">
+                  <td class="text-base-content">{appointment.date}</td>
+                  <td class="text-base-content">{appointment.time}</td>
+                  <td class="text-base-content">{appointment.doctorName}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/if}
+    </div>
+  </div>
+</div>
 
 <style>
+  .card {
+    flex: 1;
+    padding: 1rem 1rem;
+    margin: 0.5rem;
+    position: relative;
+  }
+
   .appointments {
     display: flex;
     flex-direction: column;
@@ -60,16 +121,6 @@
     box-sizing: border-box;
   }
 
-  .appointment {
-    background: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    width: calc(100% - 20px);
-    text-align: left;
-    box-sizing: border-box;
-  }
-
   .spinner-container {
     display: flex;
     align-items: center;
@@ -77,24 +128,6 @@
     width: 100%;
     height: 100%;
     flex-grow: 1;
-  }
-
-  .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border-left-color: #09f;
-    animation: spin 1s ease infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
   }
 
   .error,

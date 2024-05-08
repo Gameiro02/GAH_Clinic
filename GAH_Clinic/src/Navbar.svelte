@@ -33,69 +33,31 @@
   }
 </script>
 
-<nav class="navbar">
-  <div class="logo">
-    <img src={logo} alt="GAH Logo" class="logo-img" />
+<div class="navbar bg-base-100">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li><a>Homepage</a></li>
+        <li><a>Portfolio</a></li>
+        <li><a>About</a></li>
+      </ul>
+    </div>
   </div>
-  <div class="menu">
-    <a href="/" on:click={(event) => handleDashboardClick(event)}>Dashboard</a>
-    <a href="/" on:click={(event) => handleAppointmentsClick(event)}
-      >Minhas Consultas</a
-    >
-    <!-- <a href="/" on:click={(event) => handlePaymentsClick(event)}>Pagamentos</a> -->
-    <a href="/" on:click={(event) => handleSettingsClick(event)}
-      >Configurações</a
-    >
-    <a href="/" on:click={(event) => handleSupportClick(event)}>Suporte</a>
-    <button on:click={(event) => handleLogout(event)}>Logout</button>
+  <div class="navbar-center">
+    <a class="btn btn-ghost text-xl">GAH Clinic</a>
   </div>
-</nav>
-
-<style>
-  .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #62B6CB;
-    color: #333;
-    padding: 0.5rem 1rem;
-    font-family: sans-serif;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 60px;
-    max-width: 100%;
-  }
-
-  .logo-img {
-    display: block;
-    width: 60px; /* Reduz a largura para 80px */
-    height: 63px; /* Mantém a proporção da imagem */
-  }
-
-  .navbar .menu a,
-  .navbar .menu button {
-    color: white;
-    text-decoration: none;
-    margin-left: 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0.5rem;
-    border-radius: 5px;
-  }
-
-  .navbar .menu button {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-  }
-
-  .navbar .menu a:hover,
-  .navbar .menu button:hover {
-    background-color: #666; /* Um leve escurecimento no hover */
-  }
-</style>
+  <div class="navbar-end">
+    <button class="btn btn-ghost btn-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+    </button>
+    <button class="btn btn-ghost btn-circle">
+      <div class="indicator">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+        <span class="badge badge-xs badge-primary indicator-item"></span>
+      </div>
+    </button>
+  </div>
+</div>

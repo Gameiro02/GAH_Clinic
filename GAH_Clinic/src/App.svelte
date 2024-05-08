@@ -7,6 +7,7 @@
   import ScheduleAppointment from "./ScheduleAppointment.svelte";
 
   onMount(() => {
+    document.documentElement.setAttribute('data-theme', 'cupcake');
     // Redirect to /login if the current window location is the root
     const path = window.location.pathname;
     if (path === "/" || path === "/index.html") {
@@ -16,8 +17,9 @@
 </script>
 
 <Router>
-  <nav></nav>
+  <Route path="/" component={Dashboard} />
   <Route path="/login" component={Login} />
   <Route path="/dashboard" component={Dashboard} />
   <Route path="/schedule-appointment" component={ScheduleAppointment} />
 </Router>
+<!-- <Login /> -->
