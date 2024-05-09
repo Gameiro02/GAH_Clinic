@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-5ftw45s9hsd*&&x09(uxbt3rzson-f)^-a^a0d6t^99nr#lz@s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://gah-clinic.us-east-1.elasticbeanstalk.com/", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["gah-clinic.us-east-1.elasticbeanstalk.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -64,16 +65,17 @@ SIMPLE_JWT = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://gah-clinic-web.eba-6fgtpcwm.us-east-1.elasticbeanstalk.com",
 ]
 
 ROOT_URLCONF = 'myproject.urls'

@@ -4,6 +4,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
+    "prestart": "bash prestart.sh",
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public --single"

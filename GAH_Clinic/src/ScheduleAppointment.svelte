@@ -26,7 +26,7 @@
 
                 console.log("Request data:", requestData)
 
-                const response = await fetch("http://localhost:8000/book-appointment/", {
+                const response = await fetch("http://gah-clinic.us-east-1.elasticbeanstalk.com/book-appointment/", {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
