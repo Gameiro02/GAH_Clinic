@@ -1,89 +1,42 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import status
+from rest_framework import serializers
 from .utils import aws_services
 from operator import itemgetter
-import uuid
+from .authentication import create_token, decode_token
+from django.contrib.auth import authenticate
 
-# class BookAppointmentView(APIView):
-#     permission_classes = [IsAuthenticated]
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+    
+    def post(self, request, *args, **kwargs):
+        username = request.data.get("username")
+        password = request.data.get("password")
+            
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            token = create_token(user.id)
+            return Response({"access": token, "user": user.username})
+        else:
+            return Response({"error": "Invalid credentials"}, status=400)
 
-#     def post(self, request):
-#         user_id = request.user.id # Extracting the user ID from the JWT
-#         data = request.data
-
-#         # Validate and extract appointment details
-#         specialty = data.get("specialty")
-#         doctorId = data.get("doctorId")
-#         date = data.get("date")
-#         time = data.get("time")
-
-#         # Check if any of the required fields are missing
-#         if not specialty or not doctorId or not date or not time:
-#             return Response({"status": "error", "message": "All fields are required"}, status=400)
-
-#         # Generate a UUID for the appointment ID
-#         appointment_id = str(uuid.uuid4())
-
-#         # Prepare the appointment data for DynamoDB
-#         appointment_data = {
-#             "appointmentId": appointment_id,
-#             "userId": user_id,
-#             "specialty": specialty,
-#             "doctorId": doctorId,
-#             "date": date,
-#             "time": time,
-#             "status": "waiting for payment",
-#         }
-
-#         # Attempt to put the appointment data into DynamoDB
-#         response = aws_services.put_appointment_to_dynamodb(appointment_data)
-
-#         if response.get("status") == "error":
-#             if response.get("message") == "An appointment already exists at this date and time":
-#                 status_code = 409 # Conflict
-#             elif response.get("message") == "Doctor does not exist":
-#                 status_code = 404
-#             else:
-#                 status_code = 500
-#             return Response({"status": "error", "message": response["message"]}, status=status_code)
-
-#         if response.get("status") == "success":
-#             # Start the payment workflow
-#             workflow_result = aws_services.start_payment_workflow(appointment_id, user_id)
-#             if workflow_result and workflow_result.get("success"):
-#                 return Response({
-#                     "status": "success",
-#                     "message": "Appointment booked and payment workflow started successfully",
-#                     "appointment_id": appointment_id
-#                 }, status=201)
-#             else:
-#                 return Response({"status": "error", "message": workflow_result.get("message", "Failed to start payment workflow")}, status=500)
-
-#         # If the response does not match expected outcomes
-#         return Response({"status": "error", "message": "Unexpected response from DynamoDB"}, status=500)
-
+class AppointmentSerializer(serializers.Serializer):
+    specialty = serializers.CharField(required=True)
+    doctorId = serializers.IntegerField(required=True)
+    date = serializers.CharField(required=True)
+    time = serializers.CharField(required=True)
 
 class BookAppointmentView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        user_id = request.user.id
-        data = request.data
-
-        # Validate and extract appointment details
-        specialty = data.get("specialty")
-        doctorId = data.get("doctorId")
-        date = data.get("date")
-        time = data.get("time")
-
-        # Check if any of the required fields are missing
-        if not specialty or not doctorId or not date or not time:
-            return Response({"status": "error", "message": "All fields are required"}, status=400)
-
-        # Start the booking process
-        result = aws_services.book_appointment(
-            user_id, specialty, doctorId, date, time)
+        serializer = AppointmentSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"status": "error", "message": "Invalid data"}, status=400)
+        
+        result = aws_services.book_appointment(**serializer.validated_data, user_id=request.user.id)
 
         if result["success"]:
             return Response({

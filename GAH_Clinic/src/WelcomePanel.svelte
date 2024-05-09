@@ -1,5 +1,4 @@
 <script>
-  import Calendar from "./Calendar.svelte";
   import { navigate } from "svelte-routing";
 
   export let userName;

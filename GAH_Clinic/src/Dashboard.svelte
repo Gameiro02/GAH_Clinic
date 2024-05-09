@@ -15,7 +15,7 @@
       if (tokenString) {
         const token = JSON.parse(tokenString);
         const response = await fetch(
-          "http://gah-clinic.us-east-1.elasticbeanstalk.com/user/appointments/",
+          "http://localhost:8000/user/appointments/",
           {
             method: "GET",
             headers: {
