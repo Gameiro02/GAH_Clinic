@@ -29,10 +29,6 @@
       }
     }
   </script>
-
-  <div class="p-4 max-w-md mx-auto bg-blue-500 text-white rounded-lg shadow-lg">
-    Hello, Tailwind CSS!
-  </div>
   
   <h2>Login</h2>
   <form class="login-form" on:submit|preventDefault={handleLogin}>
