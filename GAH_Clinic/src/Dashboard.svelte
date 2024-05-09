@@ -1,8 +1,9 @@
 <script>
   import Navbar from "./Navbar.svelte";
   import WelcomePanel from "./WelcomePanel.svelte";
-  import Empty from "./Cards/Empty.svelte";
+  import Empty from "./Cards/BookAppointment.svelte";
   import AppointmentsPanel from "./Cards/AppointmentsPanel.svelte";
+  import BookAppointment from "./Cards/BookAppointment.svelte";
   import HistoryPanel from "./Cards/HistoryPanel.svelte";
   import { onMount } from "svelte";
   import { appointmentsData } from "./store.js";
@@ -81,8 +82,8 @@
           <Calendar />
           <ClinicRating averageRating={5} totalRatings={100} />
         </div> -->
-      <Empty />
       <AppointmentsPanel />
+      <BookAppointment />
       <HistoryPanel />
     </div>
   </div>

@@ -3,7 +3,6 @@
   import { onMount } from "svelte";
   import Login from "./Login.svelte";
   import Dashboard from "./Dashboard.svelte";
-  import WelcomePanel from "./WelcomePanel.svelte";
   import ScheduleAppointment from "./ScheduleAppointment.svelte";
 
   onMount(() => {
