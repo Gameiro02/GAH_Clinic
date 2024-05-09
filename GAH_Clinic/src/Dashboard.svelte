@@ -1,9 +1,6 @@
 <script>
   import Navbar from "./Navbar.svelte";
-  import Calendar from "./Calendar.svelte";
   import WelcomePanel from "./WelcomePanel.svelte";
-  import ClinicRating from "./ClinicRating.svelte";
-  import Pannel from "./Pannel.svelte";
   import Empty from "./Cards/Empty.svelte";
   import AppointmentsPanel from "./Cards/AppointmentsPanel.svelte";
   import HistoryPanel from "./Cards/HistoryPanel.svelte";

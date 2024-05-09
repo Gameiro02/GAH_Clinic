@@ -17,7 +17,6 @@
 </script>
 
 <Router>
-  <Route path="/" component={Dashboard} />
   <Route path="/login" component={Login} />
   <Route path="/dashboard" component={Dashboard} />
   <Route path="/schedule-appointment" component={ScheduleAppointment} />

@@ -9,7 +9,7 @@
 
 <div class="card w-96 bg-base-200 shadow-xl flex-1">
   <div class="card-body items-center text-center p-1">
-    <h2 class="card-title text-base-content text-4xl mb-2">Histórico de Consultas</h2>
+    <h2 class="card-title text-base-content text-4xl mb-2 mt-4">Histórico de Consultas</h2>
     <div class="appointments flex flex-col w-full">
       {#if data.isLoading}
         <div class="spinner-container flex items-center justify-center mt-20">
@@ -21,13 +21,13 @@
           ></l-cardio>
         </div>
       {:else if data.errorMessage}
-        <p class="error">{data.errorMessage}</p>
+        <p class="error text-error text-center font-bold text-xl mt-16">{data.errorMessage}</p>
       {:else if data.pastAppointments.length === 0}
-        <p class="info">Não tens nenhuma consulta histórica.</p>
+        <p class="info text-info text-center font-bold text-xl mt-16">Ainda não tiveste nenhuma consulta.</p>
       {:else}
-        <div class="overflow-x-auto flex-1">
+        <div class="overflow-y-auto max-h-72">
           <table class="table w-full min-w-full bg-base-200">
-            <thead class="border-b-2 border-base-content text-white">
+            <thead class="border-b-2 border-base-content text-accent">
               <tr>
                 <th>Data</th>
                 <th>Hora</th>
@@ -36,7 +36,7 @@
             </thead>
             <tbody>
               {#each data.pastAppointments as appointment, index}
-                <tr class="hover:bg-base-300">
+                <tr class="hover:bg-primary">
                   <td class="text-base-content">{appointment.date}</td>
                   <td class="text-base-content">{appointment.time}</td>
                   <td class="text-base-content">{appointment.doctorName}</td>
@@ -49,3 +49,4 @@
     </div>
   </div>
 </div>
+
