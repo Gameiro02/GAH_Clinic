@@ -38,14 +38,14 @@ def book_appointment(user_id, specialty, doctorId, date, time):
         "date": date,
         "time": time
     }
-        
+            
     state_machine_arn = "arn:aws:states:us-east-1:940760857739:stateMachine:BookAppointment"
      
     try:
         execution_info = start_execution(state_machine_arn, input_data)
         execution_arn = execution_info["executionArn"]
         execution_response = poll_execution_status(execution_arn)
-                
+                        
         # If the execution succeeded, start the payment workflow
         if execution_response['status'] == 'SUCCEEDED':
             output_data = json.loads(execution_response["output"])

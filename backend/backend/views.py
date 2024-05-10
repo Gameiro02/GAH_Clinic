@@ -35,9 +35,9 @@ class BookAppointmentView(APIView):
         serializer = AppointmentSerializer(data=request.data)
         if not serializer.is_valid():
             return Response({"status": "error", "message": "Invalid data"}, status=400)
-        
+                
         result = aws_services.book_appointment(**serializer.validated_data, user_id=request.user.id)
-
+        
         if result["success"]:
             return Response({
                 "status": "success",
@@ -57,7 +57,7 @@ class BookAppointmentView(APIView):
                     "message": "An appointment already exists at this date and time."
                 }, status=409)
 
-            return Response({"status": "error", "message": result["message"]}, status=500)
+            return Response({"status": "error", "message": result}, status=500)
 
 
 class ProcessPaymentView(APIView):

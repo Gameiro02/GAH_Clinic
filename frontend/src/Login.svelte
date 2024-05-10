@@ -7,7 +7,7 @@
   
     async function handleLogin() {
       try {
-        const response = await fetch("http://localhost:8000/login/", {
+        const response = await fetch("http://gah-clinic.us-east-1.elasticbeanstalk.com/login/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),

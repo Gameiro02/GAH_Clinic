@@ -37,13 +37,13 @@
             </thead>
             <tbody>
               {#each data.upcomingAppointments as appointment, index}
-                <tr class:bg-accent={appointment.status === "waiting for payment"} class="hover:bg-primary bg-base-300">
-                  <td class="text-base-content text-center font-medium rounded-l-full py-4">{appointment.specialty}</td>
-                  <td class="text-base-content text-center font-medium py-4">{appointment.doctorName}</td>
-                  <td class="text-base-content text-center font-medium py-4">{appointment.date}</td>
-                  <td class="text-base-content text-center font-medium rounded-r-full py-4">{appointment.time}</td>
-                </tr>
-              {/each}
+              <tr class="{appointment.status === "waiting for payment" ? "bg-accent" : "bg-base-300"} hover:bg-primary">
+                <td class="text-base-content text-center font-medium rounded-l-full py-4">{appointment.specialty}</td>
+                <td class="text-base-content text-center font-medium py-4">{appointment.doctorName}</td>
+                <td class="text-base-content text-center font-medium py-4">{appointment.date}</td>
+                <td class="text-base-content text-center font-medium rounded-r-full py-4">{appointment.time}</td>
+              </tr>
+            {/each}
             </tbody>
           </table>
         </div>
