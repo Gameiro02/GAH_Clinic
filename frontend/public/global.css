@@ -3,13 +3,13 @@ html, body {
 	position: relative;
 	width: 100%;
 	height: 100%;
+	overflow: auto;
 }
 
 body {
 	color: #333;
     font-family: sans-serif;
     line-height: 1.6;
-	padding-top: 70px;
 }
 form {
 	display: flex;

@@ -1,9 +1,7 @@
 <script>
   import Navbar from "./Navbar.svelte";
   import WelcomePanel from "./WelcomePanel.svelte";
-  import Empty from "./Cards/BookAppointment.svelte";
   import AppointmentsPanel from "./Cards/AppointmentsPanel.svelte";
-  import BookAppointment from "./Cards/BookAppointment.svelte";
   import HistoryPanel from "./Cards/HistoryPanel.svelte";
   import { onMount } from "svelte";
   import { appointmentsData } from "./store.js";
@@ -51,6 +49,9 @@
           data.pastAppointments = result.appointments.filter(
             (app) => app.status === "finished"
           );
+          data.missingPaymentAppointments = result.appointments.filter(
+            (app) => app.status === "waiting for payment"
+          );
           data.isLoading = false;
           data.errorMessage = "";
           return data;
@@ -71,48 +72,15 @@
   onMount(fetchAppointments);
 </script>
 
-<main class="container mx-auto p-4">
+<main class="flex flex-col mx-auto w-screen h-screen px-6 pt2 pb-6">
   <Navbar />
-  <div class="flex flex-col space-y-5">
+  <div class="flex flex-col flex-grow space-y-5">
     <div class="welcome">
       <WelcomePanel userName={localStorage.getItem("user")} />
     </div>
-    <div class="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-5">
-      <!-- <div>
-          <Calendar />
-          <ClinicRating averageRating={5} totalRatings={100} />
-        </div> -->
-      <AppointmentsPanel />
-      <BookAppointment />
+    <div class="flex flex-col flex-grow md:flex-row space-y-5 md:space-y-0 md:space-x-5">
       <HistoryPanel />
+      <AppointmentsPanel />
     </div>
   </div>
 </main>
-
-<!-- <style>
-  .welcome {
-    display: flex;
-    justify-content: center; /* Center the panel horizontally */
-    margin-top: 10px;
-  }
-
-  .panels {
-    display: flex;
-    justify-content: center; /* Center the panels horizontally */
-    margin-top: 10px;
-  }
-
-  .panels > div {
-    margin: 0 10px; /* Add margin between panels if needed */
-  }
-
-  @media (max-width: 768px) {
-    .panels {
-      flex-direction: column; /* Change to column layout on small screens */
-    }
-
-    .panels > div {
-      margin: 10px 0; /* Add margin between panels if needed */
-    }
-  }
-</style> -->

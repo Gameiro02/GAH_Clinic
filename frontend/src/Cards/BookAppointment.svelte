@@ -2,10 +2,7 @@
   let showButton = true;
 </script>
 
-<div
-  class="card w-96 bg-base-200 shadow-xl flex flex-col justify-center"
-  style="height: 40vh;"
->
+<div class="card w-full bg-base-200 shadow-2xl flex-1">
   <div class="card-body flex justify-center items-center w-full">
     {#if showButton}
       <button

@@ -20,4 +20,3 @@
   <Route path="/dashboard" component={Dashboard} />
   <Route path="/schedule-appointment" component={ScheduleAppointment} />
 </Router>
-<!-- <Login /> -->

@@ -1,7 +1,5 @@
 <script>
     import { navigate } from "svelte-routing";
-    import logo from "../public/logo.svg";
-    import Button from "./Button.svelte";
 
     let username = "";
     let password = "";
@@ -29,54 +27,29 @@
       }
     }
   </script>
-  
-  <h2>Login</h2>
-  <form class="login-form" on:submit|preventDefault={handleLogin}>
-    <img class="logo" src={logo} alt="GAH Logo" />
-    <input id="username" type="text" placeholder="User name" bind:value={username} required />
-    <input id="password" type="password" placeholder="Password" bind:value={password} required />
 
-    <Button text="Submit"/>
-    {#if errorMessage}
-      <p class="error">{errorMessage}</p>
-    {/if}
-  </form>
-  
-  <style>
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      max-width: 300px;
-      margin: 20vh auto;
-      padding: 2em;
-      background: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 25px;
-      align-items: center;
-    }
-
-    input {
-        background-color: #eee;
-    }
-  
-    input {
-      margin: 0.5em 0;
-      padding: 0.8em;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      transition: border-color 0.3s;
-    }
-    input:focus {
-      border-color: #0056b3;
-      outline: none;
-    }
-    
-    .error {
-      color: red;
-    }
-  
-    img.logo {
-      max-width: 100px;
-      height: auto;
-    }
-  </style>
+<div class="flex justify-center items-center h-screen">
+  <div class="card w-96 shrink-0 flex flex-col justify-center max-w-sm shadow-2xl bg-base-200">
+    <form class="card-body flex justify-center items-center w-full" on:submit|preventDefault={handleLogin}>
+      <h2 class="card-title text-secondary text-3xl mb-2 mt-4">Login</h2>
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Username</span>
+        </label>
+        <input type="username" placeholder="username" class="input input-bordered" bind:value={username} required />
+      </div>
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Password</span>
+        </label>
+        <input type="password" placeholder="password" class="input input-bordered" bind:value={password} required />
+      </div>
+      <div class="form-control mt-6">
+        <button class="btn btn-primary text-lg">Login</button>
+      </div>
+      {#if errorMessage}
+       <div class="error font-bold text-error alert-error mt-4">{errorMessage}</div>
+      {/if}
+    </form>
+  </div>
+</div>
