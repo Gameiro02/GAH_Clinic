@@ -51,7 +51,7 @@
         <ul tabindex="1" class="dropdown-content z-[1] absolute right-0 menu p-2 shadow bg-base-100 rounded-box w-52">
           <li class="menu-title text-primary">Consultas por Pagar</li>
           {#each data.missingPaymentAppointments as appointment}
-            <li><a>{appointment.specialty} com o <span class="text-secondary font-bold">Dr. {appointment.doctorId}</a></li>
+            <li><a>{appointment.specialty} com o<span class="text-secondary font-bold">Dr. {appointment.doctorId}</a></li>
           {/each}
         </ul>
       </div>      

@@ -14,8 +14,7 @@
                 const specialty = selectedSpecialty;
                 const doctorId = parseInt(selectedDoctor);
                 const date = new Date(selectedDate).toISOString().slice(0, 10);  // Gets 'YYYY-MM-DD'
-                const timeParts = selectedTime.split(':');
-                const time = timeParts.length === 2 ? `${selectedTime}:00` : selectedTime;  // Ensures 'HH:mm:ss'
+                const time = selectedTime;
                 
                 const requestData = JSON.stringify({
                     specialty,

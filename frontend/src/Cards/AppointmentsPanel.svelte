@@ -26,22 +26,22 @@
         <p class="info text-info text-center font-bold text-xl mt-16">Não tens nenhuma consulta agendada.</p>
       {:else}
         <div class="overflow-y-auto max-h-96">
-          <table class="table w-full min-w-full bg-base-200">
-            <thead class="border-b-2 border-base-content text-accent">
+          <table class="table w-full min-w-full bg-base-200 border-separate border-spacing-y-2">
+            <thead class="border-b-2 border-bg-base-200 text-accent">
               <tr>
-                <th class="text-lg rounded-tl-full py-3">Especialidade</th>
-                <th class="text-lg py-3">Médico</th>
-                <th class="text-lg py-3">Data</th>
-                <th class="text-lg rounded-tr-full py-3">Hora</th>
+                <th class="text-xl text-center rounded-tl-full py-3">Especialidade</th>
+                <th class="text-xl text-center py-3">Médico</th>
+                <th class="text-xl text-center py-3">Data</th>
+                <th class="text-xl text-center rounded-tr-full py-3">Hora</th>
               </tr>
             </thead>
             <tbody>
               {#each data.upcomingAppointments as appointment, index}
-                <tr class:bg-warning={appointment.status === "waiting for payment"} class="hover:bg-primary">
-                  <td class="text-base-content font-bold rounded-l-full py-4">{appointment.specialty}</td>
-                  <td class="text-base-content font-bold py-4">{appointment.doctorName}</td>
-                  <td class="text-base-content font-bold py-4">{appointment.date}</td>
-                  <td class="text-base-content font-bold rounded-r-full py-4">{appointment.time}</td>
+                <tr class:bg-accent={appointment.status === "waiting for payment"} class="hover:bg-primary bg-base-300">
+                  <td class="text-base-content text-center font-medium rounded-l-full py-4">{appointment.specialty}</td>
+                  <td class="text-base-content text-center font-medium py-4">{appointment.doctorName}</td>
+                  <td class="text-base-content text-center font-medium py-4">{appointment.date}</td>
+                  <td class="text-base-content text-center font-medium rounded-r-full py-4">{appointment.time}</td>
                 </tr>
               {/each}
             </tbody>
