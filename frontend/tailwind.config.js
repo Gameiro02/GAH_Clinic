@@ -8,6 +8,6 @@ export default {
     require('daisyui'),
   ],
   daisyui: {
-    themes: ["aqua", "dark", "cupcake", "drakula"],
+    themes: ["aqua", "dark", "cupcake", "drakula", "dim", "night"],
   },
 };

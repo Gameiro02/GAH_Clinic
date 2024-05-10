@@ -15,8 +15,8 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-GAH_CLINIC_BUILD = BASE_DIR.parent / 'GAH_Clinic/public/build'
-GAH_CLINIC_PUBLIC = BASE_DIR.parent / 'GAH_Clinic/public'
+GAH_CLINIC_BUILD = BASE_DIR.parent / 'frontend/public/build'
+GAH_CLINIC_PUBLIC = BASE_DIR.parent / 'frontend/public'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/

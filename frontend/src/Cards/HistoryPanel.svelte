@@ -9,7 +9,7 @@
 
 <div class="card w-96 bg-base-200 shadow-xl flex-1">
   <div class="card-body items-center text-center p-1">
-    <h2 class="card-title text-base-content text-4xl mb-2 mt-4">Histórico de Consultas</h2>
+    <h2 class="card-title text-secondary text-3xl mb-2 mt-4">Histórico de Consultas</h2>
     <div class="appointments flex flex-col w-full">
       {#if data.isLoading}
         <div class="spinner-container flex items-center justify-center mt-20">
@@ -17,7 +17,7 @@
             size="150"
             stroke="10"
             speed="0.7"
-            color="oklch(var(--bc))"
+            color="oklch(var(--s))"
           ></l-cardio>
         </div>
       {:else if data.errorMessage}
