@@ -1,5 +1,5 @@
 <script>
-  import { Router, Route, Link, navigate } from "svelte-routing";
+  import { Router, Route, navigate } from "svelte-routing";
   import { onMount } from "svelte";
   import Login from "./Login.svelte";
   import Dashboard from "./Dashboard.svelte";

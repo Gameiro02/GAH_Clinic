@@ -5,6 +5,7 @@
   import HistoryPanel from "./Cards/HistoryPanel.svelte";
   import { onMount } from "svelte";
   import { appointmentsData } from "./store.js";
+  import { DOMAIN } from "./config.js";
 
   // Fetch appointments data
   async function fetchAppointments() {
@@ -13,7 +14,7 @@
       if (tokenString) {
         const token = JSON.parse(tokenString);
         const response = await fetch(
-          "http://gah-clinic.us-east-1.elasticbeanstalk.com/user/appointments/",
+          `${DOMAIN}/user/appointments/`,
           {
             method: "GET",
             headers: {

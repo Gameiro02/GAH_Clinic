@@ -12,9 +12,10 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request, *args, **kwargs):
+        print(request.data)
         username = request.data.get("username")
         password = request.data.get("password")
-            
+        
         user = authenticate(username=username, password=password)
         if user is not None:
             token = create_token(user.id)

@@ -1,4 +1,6 @@
 <script>
+    import { DOMAIN } from "./config.js";
+    
     let selectedSpecialty = '';
     let selectedDoctor = '';
     let selectedDate = '';
@@ -25,7 +27,7 @@
 
                 console.log("Request data:", requestData)
 
-                const response = await fetch("http://gah-clinic.us-east-1.elasticbeanstalk.com/book-appointment/", {
+                const response = await fetch(`${DOMAIN}/book-appointment/`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

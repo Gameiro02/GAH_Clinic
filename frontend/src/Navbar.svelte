@@ -1,5 +1,6 @@
 <script>
   import { appointmentsData } from "./store.js";
+  import Payment from "./Payment.svelte";
 
   document.addEventListener('DOMContentLoaded', function () {
     const themeToggle = document.querySelector('.theme-controller');
@@ -13,6 +14,17 @@
       }
     });
   });
+
+  let selectedAppointment = null;
+  let showModal = false;
+
+  function openModal(appointment) {
+    selectedAppointment = appointment;
+    showModal = false;
+    requestAnimationFrame(() => {
+      showModal = true;
+    })
+  }
 
   $: data = $appointmentsData;
 </script>
@@ -38,7 +50,7 @@
         <svg class="swap-on fill-current w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
       </label>
       <div class="dropdown">
-        <div tabindex="1" role="button" class="btn m-1 btn-ghost text-secondary flex items-center">
+        <div tabindex="0" role="button" class="btn m-1 btn-ghost text-secondary flex items-center">
           <div class="indicator">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
@@ -48,12 +60,13 @@
             {/if}
           </div>
         </div>
-        <ul tabindex="1" class="dropdown-content z-[1] absolute right-0 menu p-2 shadow bg-base-100 rounded-box w-52">
-          <li class="menu-title text-primary">Consultas por Pagar</li>
-          {#each data.missingPaymentAppointments as appointment}
-            <li><a>{appointment.specialty} com o<span class="text-secondary font-bold">Dr. {appointment.doctorId}</a></li>
-          {/each}
-        </ul>
-      </div>      
+          <ul class="dropdown-content z-[1] absolute right-0 menu p-2 shadow bg-base-100 rounded-box w-52">
+            <li class="menu-title text-primary">Consultas por Pagar</li>
+            {#each data.missingPaymentAppointments as appointment}
+              <li><button on:click={() => openModal(appointment)}>{appointment.specialty} com o<span class="text-secondary font-bold"> Dr. {appointment.doctorId}</span></button></li>
+            {/each}
+          </ul>
+        <Payment appointment={selectedAppointment} showModal={showModal}/>
+      </div>     
   </div>
 </div>
