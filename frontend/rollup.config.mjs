@@ -49,7 +49,6 @@ export default {
 				dev: !production
 			}
 		}),
-		css({ output: 'bundle.css' }),
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],

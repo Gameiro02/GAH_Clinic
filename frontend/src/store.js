@@ -7,3 +7,5 @@ export const appointmentsData = writable({
     isLoading: true,
     errorMessage: ''
 });
+
+export const theme = writable('light');

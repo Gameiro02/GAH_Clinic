@@ -7,7 +7,7 @@
   $: data = $appointmentsData;
 </script>
 
-<div class="card w-full bg-base-200 shadow-2xl flex-1">
+<div class="card w-full bg-base-200 shadow-base-100 shadow-2xl flex-1">
   <div class="card-body items-center text-center p-1">
     <h2 class="card-title text-secondary text-3xl mb-2 mt-4">Histórico de Consultas</h2>
     <div class="appointments flex flex-col h-full w-full">

@@ -105,12 +105,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gah_db',
+        'USER': 'admin',
         'PASSWORD': 'password',
-        'HOST': 'gah-db.cxrslq7uaknl.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'HOST': 'mysql-gah.cxrslq7uaknl.us-east-1.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 

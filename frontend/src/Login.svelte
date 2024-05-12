@@ -52,7 +52,7 @@
         {#if isLoading}
         <div class="spinner-container">
           <l-cardio
-            size="50"
+            size="60"
             stroke="4"
             speed="0.7"
             color="oklch(var(--s))"

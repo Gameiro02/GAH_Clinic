@@ -1,13 +1,28 @@
 <script>
-  import { appointmentsData } from "../store.js";
+  import { appointmentsData, theme } from "../store.js";
   import { cardio } from 'ldrs'
+  import Payment from "../Payment.svelte";
 
   cardio.register();
 
+  let selectedAppointment = null;
+  let showModal = false;
+
+  function openModal(appointment) {
+    if (appointment.status === "waiting for payment") {
+      selectedAppointment = appointment;
+      showModal = false;
+      requestAnimationFrame(() => {
+        showModal = true;
+      });
+    }
+  }
+
   $: data = $appointmentsData;
+  $: themeColor = $theme;
 </script>
 
-<div class="card w-full bg-base-200 shadow-2xl flex-1">
+<div class="card w-full bg-base-200 shadow-2xl shadow-base-100 flex-1 ${themeColor === 'dark' ? 'shadow-white' : 'shadow-black'}">
   <div class="card-body items-center text-center p-1">
     <h2 class="card-title text-secondary text-3xl mb-2 mt-4">Próximas Consultas</h2>
     <div class="appointments flex flex-col h-full w-full">
@@ -37,7 +52,9 @@
             </thead>
             <tbody>
               {#each data.upcomingAppointments as appointment, index}
-              <tr class="{appointment.status === "waiting for payment" ? "bg-accent" : "bg-base-300"} hover:bg-primary">
+              <tr class="{appointment.status === 'waiting for payment' ? 'bg-accent' : 'bg-base-300'} hover:bg-primary"
+                  on:click={() => openModal(appointment)}
+                  style="cursor: pointer;">
                 <td class="text-base-content text-center font-medium rounded-l-full py-4">{appointment.specialty}</td>
                 <td class="text-base-content text-center font-medium py-4">{appointment.doctorName}</td>
                 <td class="text-base-content text-center font-medium py-4">{appointment.date}</td>
@@ -46,6 +63,7 @@
             {/each}
             </tbody>
           </table>
+          <Payment appointment={selectedAppointment} showModal={showModal}/>
         </div>
       {/if}
     </div>

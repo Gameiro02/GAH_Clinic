@@ -1,4 +1,5 @@
 import boto3
+import botocore
 from boto3.dynamodb.conditions import Key
 from fastapi.responses import JSONResponse
 from botocore.exceptions import ClientError
@@ -6,8 +7,11 @@ import json
 import time
 from .aws_step_functions_utils import start_execution, get_execution_response, fetch_execution_history, parse_error_from_history, poll_execution_status
     
-def update_payment_status(appointment_id, user_id):
-    # Update payment status in DynamoDB
+import boto3
+
+import boto3
+
+def process_payment(appointment_id, user_id):
     try:
         dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
         table = dynamodb.Table("Appointments")
@@ -15,19 +19,26 @@ def update_payment_status(appointment_id, user_id):
             Key={
                 "appointmentId": appointment_id,
                 "userId": user_id,
-                },
-            UpdateExpression="SET #status = :val",
+            },
+            UpdateExpression="SET #status = :new_status",
+            ConditionExpression="#status = :current_status",
             ExpressionAttributeNames={
                 "#status": "status"
             },
             ExpressionAttributeValues={
-                ":val": "scheduled"
+                ":new_status": "scheduled",
+                ":current_status": "waiting for payment"
             }
         )
-        return True
+        return True, "Status updated to scheduled"
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "ConditionalCheckFailedException":
+            return False, "Payment already made"
     except Exception as e:
         print(e)
-        return False
+        return False, f"An error occurred: {e}"
+
+
     
 
 def book_appointment(user_id, specialty, doctorId, date, time):

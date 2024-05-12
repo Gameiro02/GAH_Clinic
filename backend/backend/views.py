@@ -12,7 +12,6 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request, *args, **kwargs):
-        print(request.data)
         username = request.data.get("username")
         password = request.data.get("password")
         
@@ -75,9 +74,12 @@ class ProcessPaymentView(APIView):
 
         if payment_successful:
             # Update the appointment status in DynamoDB
-            if aws_services.update_payment_status(appointment_id, user_id):
+            success, message = aws_services.process_payment(appointment_id, user_id)
+            if success:
                 return Response({"status": "success", "message": "Payment processed successfully"}, status=200)
             else:
+                if message == "Payment already made":
+                    return Response({"status": "error", "message": "Payment already made"}, status=409)
                 return Response({"status": "error", "message": "Failed to update appointment status"}, status=500)
         else:
             return Response({"status": "error", "message": "Payment processing failed"}, status=400)
