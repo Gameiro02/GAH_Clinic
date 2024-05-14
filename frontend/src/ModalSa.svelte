@@ -3,7 +3,6 @@
   let selectedDoctor = '';
   let selectedDate = '';
   let selectedTime = '';
-  let themeColor = 'dark'; // Isto ainda pode ser usado para outras partes do tema, se necessário.
 </script>
 
 <button class="btn btn-primary mt-4" onclick="modalSa.showModal()">
