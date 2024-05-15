@@ -4,6 +4,19 @@
 
   let showNotification = false;
 
+  function convertDoctorIdtoName(doctorId) {
+    const doctorIdMap = {
+      "Pedro Pais": 1,
+      "Afonso Mora": 2,
+      "Mariana Filho": 3,
+      "Carlos Sousa": 4,
+    };
+
+    return Object.keys(doctorIdMap).find(
+      (key) => doctorIdMap[key] === doctorId
+    );
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     const themeToggle = document.querySelector(".theme-controller");
     themeToggle.addEventListener("change", function () {
@@ -127,7 +140,7 @@
                 >{appointment.specialty} com o<span
                   class="text-secondary font-bold"
                 >
-                  Dr. {appointment.doctorId}</span
+                  Dr. {convertDoctorIdtoName(appointment.doctorId)}</span
                 ></button
               >
             </li>

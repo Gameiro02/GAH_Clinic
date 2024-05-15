@@ -8,6 +8,14 @@
   let selectedTime = "";
   let modalOpen = false;
 
+  const specialties = ["Massage", "Physiotherapy", "Psychology", "Orthopedics"];
+  const doctors = [
+    { id: 1, name: "Pedro Pais" },
+    { id: 2, name: "Afonso Mora" },
+    { id: 3, name: "Mariana Filho" },
+    { id: 4, name: "Carlos Sousa" },
+  ];
+
   async function scheduleAppointment(event) {
     event.preventDefault(); // Prevent default form submission
     try {
@@ -114,13 +122,17 @@
                 class="text-md text-center font-bold text-primary"
                 >Specialty:</label
               >
-              <input
+              <select
                 id="specialty"
-                type="text"
                 bind:value={selectedSpecialty}
-                class="input input-bordered w-full text-base-content"
+                class="select select-bordered w-full text-base-content"
                 required
-              />
+              >
+                <option value="" disabled selected></option>
+                {#each specialties as specialty}
+                  <option value={specialty}>{specialty}</option>
+                {/each}
+              </select>
             </div>
 
             <div>
@@ -129,13 +141,17 @@
                 class="text-md text-center font-bold text-primary"
                 >Doctor:</label
               >
-              <input
+              <select
                 id="doctor"
-                type="text"
                 bind:value={selectedDoctor}
-                class="input input-bordered w-full text-base-content"
+                class="select select-bordered w-full text-base-content"
                 required
-              />
+              >
+                <option value="" disabled selected></option>
+                {#each doctors as doctor}
+                  <option value={doctor.id}>{doctor.name}</option>
+                {/each}
+              </select>
             </div>
 
             <div>
