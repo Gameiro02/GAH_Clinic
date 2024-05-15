@@ -136,10 +136,10 @@
           <li class="menu-title text-primary">Consultas por Pagar</li>
           {#each data.missingPaymentAppointments as appointment}
             <li>
-              <button on:click={() => openModal(appointment)}
-                >{appointment.specialty} com o<span
-                  class="text-secondary font-bold"
-                >
+              <button
+                class="text-base-content"
+                on:click={() => openModal(appointment)}
+                >{appointment.specialty} com o<span class="text-secondary">
                   Dr. {convertDoctorIdtoName(appointment.doctorId)}</span
                 ></button
               >

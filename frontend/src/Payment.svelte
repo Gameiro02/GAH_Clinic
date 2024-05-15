@@ -85,7 +85,7 @@
       <h3 class="flex-grow font-bold text-primary text-center text-3xl">
         Pagar consulta
       </h3>
-      <div class="text flex-grow">
+      <div class="text text-base-content flex-grow">
         <p class="pt-4 text-center font-bold text-xl">
           Consulta de <span class="text-secondary font-bold"
             >{appointment.specialty}</span
