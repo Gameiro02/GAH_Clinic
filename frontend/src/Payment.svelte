@@ -7,6 +7,12 @@
   let sucessfullMessage = "";
   let errorMessage = "";
 
+  const entity = "GAH";
+
+  function generateRandomReference(reference) {
+    return Math.floor(100000000 + Math.random() * 900000000).toString();
+  }
+
   function close() {
     showModal = false;
     sucessfullMessage = "";
@@ -94,6 +100,14 @@
             >{appointment.date}</span
           >
           às <span class="text-secondary font-bold">{appointment.time}</span> horas
+        </p>
+        <p class="pt-2 text-center text-gray text-s pb-5">
+          Entidade: <span class="text-secondary font-bold">{entity}</span>
+          <br />
+          Referência:
+          <span class="text-secondary font-bold"
+            >{generateRandomReference()}</span
+          >
         </p>
       </div>
       {#if !sucessfullMessage}
