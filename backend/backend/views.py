@@ -1,16 +1,22 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework import status
+from rest_framework.parsers import JSONParser
+from rest_framework import status, serializers
 from rest_framework import serializers
 from .utils import aws_services
 from operator import itemgetter
-from .authentication import create_token, decode_token
+from .authentication import create_token
 from django.contrib.auth import authenticate
-from botocore.exceptions import ClientError
-import boto3
 import base64
+
+# CONSTANT for status codes
+STATUS_SUCCESS = "success"
+STATUS_ERROR = "error"
+
+# Utility function for creating error responses
+def create_error_response(message, status_code):
+    return Response({"status": STATUS_ERROR, "message": message}, status=status_code)
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -24,7 +30,7 @@ class LoginView(APIView):
             token = create_token(user.id)
             return Response({"access": token, "user": user.username, "userId": user.id}, status=200)
         else:
-            return Response({"error": "Invalid credentials"}, status=400)
+            return create_error_response("Invalid credentials", status.HTTP_400_BAD_REQUEST)
 
 class AppointmentSerializer(serializers.Serializer):
     specialty = serializers.CharField(required=True)
@@ -38,7 +44,7 @@ class BookAppointmentView(APIView):
     def post(self, request):
         serializer = AppointmentSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response({"status": "error", "message": "Invalid data"}, status=400)
+            return create_error_response("Invalid data", status.HTTP_400_BAD_REQUEST)
                 
         result = aws_services.book_appointment(**serializer.validated_data, user_id=request.user.id)
         
@@ -49,19 +55,15 @@ class BookAppointmentView(APIView):
                 "appointment_id": result["appointment_id"],
             }, status=201)
         else:
-            if result["message"] == "DoctorNotFound":
-                return Response({
-                    "status": "error",
-                    "message": "Doctor does not exist."
-                }, status=404)
-
-            elif result["message"] == "AppointmentConflict":
-                return Response({
-                    "status": "error",
-                    "message": "An appointment already exists at this date and time."
-                }, status=409)
-
-            return Response({"status": "error", "message": result}, status=500)
+            return self.handle_booking_error(result)
+        
+    def handle_booking_error(self, result):
+        error_message = result["message"]
+        if error_message == "DoctorNotFound":
+            return create_error_response("Doctor does not exist", status.HTTP_404_NOT_FOUND)
+        elif error_message == "AppointmentConflict":
+            return create_error_response("An appointment already exists at this date and time", status.HTTP_409_CONFLICT)
+        return create_error_response(result, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ProcessPaymentView(APIView):
@@ -72,25 +74,26 @@ class ProcessPaymentView(APIView):
         user_id = request.user.id
 
         if not appointment_id or not user_id:
-            return Response({"status": "error", "message": "Appointment ID or User ID is required"}, status=400)
-
-        payment_successful = self.process_payment(appointment_id)
-
-        if payment_successful:
-            # Update the appointment status in DynamoDB
-            success, message = aws_services.process_payment(appointment_id, user_id)
-            if success:
-                return Response({"status": "success", "message": "Payment processed successfully"}, status=200)
-            else:
-                if message == "Payment already made":
-                    return Response({"status": "error", "message": "Payment already made"}, status=409)
-                return Response({"status": "error", "message": "Failed to update appointment status"}, status=500)
+            return create_error_response("Appointment ID or User ID is required", status.HTTP_400_BAD_REQUEST)
+        
+        if self.process_payment(appointment_id):
+            return self.update_payment_status(appointment_id, user_id)
         else:
-            return Response({"status": "error", "message": "Payment processing failed"}, status=400)
+            return create_error_response("Payment processing failed", status.HTTP_400_BAD_REQUEST)
+
 
     def process_payment(self, appointment_id):
         # Simulate payment processing
         return True
+    
+    def update_payment_status(self, appointment_id, user_id):
+        success, message = aws_services.process_payment(appointment_id, user_id)
+        if success:
+            return Response({"status": STATUS_SUCCESS, "message": "Payment processed successfully"}, status=status.HTTP_200_OK)
+        else:
+            if message == "Payment already made":
+                return create_error_response("Payment already made", status.HTTP_409_CONFLICT)
+            return create_error_response("Failed to update appointment status", status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class AppointmentStatusView(APIView):
@@ -98,18 +101,17 @@ class AppointmentStatusView(APIView):
 
     def get(self, request, appointment_id):
         user_id = request.user.id
-        result = aws_services.get_appointment_status(
-            str(appointment_id), user_id)
+        result = aws_services.get_appointment_status(str(appointment_id), user_id)
 
         if "error" in result:
-            return Response({"message": "Server error, please try again later."}, status=500)
+            return create_error_response("Server error, please try again later", status.HTTP_500_INTERNAL_SERVER_ERROR)
         if not result["found"]:
-            return Response({"message": "Appointment not found"}, status=404)
+            return create_error_response("Appointment not found", status.HTTP_404_NOT_FOUND)
 
         return Response({
             "appointment_id": result["appointment_id"],
             "status": result["status"]
-        }, status=200)
+        }, status=status.HTTP_200_OK)
 
 
 class UserAppointmentsView(APIView):
@@ -119,25 +121,11 @@ class UserAppointmentsView(APIView):
         user_id = request.user.id
         result = aws_services.get_user_appointments(user_id)
 
-        if result["status"] == "success":
-            if not result["appointments"]:
-                return Response({
-                    "status": "success",
-                    "appointments": []
-                }, status=200)
-
-            sorted_appointments = sorted(
-                result["appointments"], key=itemgetter("date", "time"))
-
-            return Response({
-                "status": "success",
-                "appointments": sorted_appointments
-            }, status=200)
+        if result["status"] == STATUS_SUCCESS:
+            sorted_appointments = sorted(result["appointments"], key=itemgetter("date", "time"))
+            return Response({"status": STATUS_SUCCESS, "appointments": sorted_appointments}, status=status.HTTP_200_OK)
         else:
-            return Response({
-                "status": "error",
-                "message": result.get("message", "Failed to retrieve appointments")
-            }, status=400)
+            return create_error_response("message", "Failed to retrieve appointments", status.HTTP_400_BAD_REQUEST)
             
 
 class DoctorsView(APIView):
@@ -146,16 +134,10 @@ class DoctorsView(APIView):
     def get(self, request):
         result = aws_services.get_doctors()
 
-        if result["status"] == "success":
-            return Response({
-                "status": "success",
-                "doctors": result["doctors"]
-            }, status=200)
+        if result["status"] == STATUS_SUCCESS:
+            return Response({"status": STATUS_SUCCESS, "doctors": result["doctors"]}, status=status.HTTP_200_OK)
         else:
-            return Response({
-                "status": "error",
-                "message": result.get("message", "Failed to retrieve doctors")
-            }, status=400)
+            return create_error_response(result.get("message", "Failed to retrieve doctors"), status.HTTP_400_BAD_REQUEST)
             
                         
 class ClinicLoginView(APIView):
@@ -170,30 +152,27 @@ class ClinicLoginView(APIView):
         try:
             header, encoded = image_data.split(",", 1)
             image_bytes = base64.b64decode(encoded)
-            
         except:
             return Response({"error": "Invalid image data"}, status=400)
             
         result = aws_services.search_faces_by_image(image_bytes)
-        
-        if result["status"] == "success":
-            face_id = result["face_id"]
-            user_result = aws_services.get_user_by_face_id(face_id)
-            
-            if user_result["status"] == "success":
-                return Response({
-                    "message": "Entered in the clinic successfully",
-                    "user_id": user_result["user_id"]
-                }, status=200)
-            else:
-                return Response({
-                    "message": user_result["message"]
-                }, status=404 if user_result["message"] == "No user associated with this face ID" else 500)
-            
+        if result["status"] == STATUS_SUCCESS:
+            return self.handle_face_recognition_success(result)
         else:
-            return Response({
-                "message": result["message"]
-                }, status=404 if result["message"] == "No faces matched" else 500)
+            return self.handle_face_recognition_failure(result)
+        
+    def handle_face_recognition_success(self, result):
+        face_id = result["face_id"]
+        user_result = aws_services.get_user_by_face_id(face_id)
+        
+        if user_result["status"] == STATUS_SUCCESS:
+            return Response({"message": "Entered in the clinic successfully", "user_id": user_result["user_id"]}, status=status.HTTP_200_OK)
+        else:
+            return create_error_response(message, status.HTTP_404_NOT_FOUND if message == "No user associated with this face ID" else status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def handle_face_recognition_failure(self, result):
+        message = result["message"]
+        return create_error_response(message, status.HTTP_404_NOT_FOUND if message == "No faces matched" else status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         
                             
