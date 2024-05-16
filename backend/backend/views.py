@@ -147,19 +147,24 @@ class ClinicLoginView(APIView):
     def post(self, request, *args, **kwargs):
         image_data = request.data.get("image")
         if not image_data:
-            return Response({"error", "No image data provided"}, status=400)
+            return create_error_response("Image data is required", status.HTTP_400_BAD_REQUEST)
         
-        try:
-            header, encoded = image_data.split(",", 1)
-            image_bytes = base64.b64decode(encoded)
-        except:
-            return Response({"error": "Invalid image data"}, status=400)
+        image_bytes = self.decode_image_data(image_data)
+        if not image_bytes:
+            return create_error_response("Invalid image data", status.HTTP_400_BAD_REQUEST)
             
         result = aws_services.search_faces_by_image(image_bytes)
         if result["status"] == STATUS_SUCCESS:
             return self.handle_face_recognition_success(result)
         else:
             return self.handle_face_recognition_failure(result)
+    
+    def decode_image_data(self, image_data):
+        try:
+            header, encoded = image_data.split(",", 1)
+            return base64.b64decode(encoded)
+        except Exception as e:
+            return None
         
     def handle_face_recognition_success(self, result):
         face_id = result["face_id"]
