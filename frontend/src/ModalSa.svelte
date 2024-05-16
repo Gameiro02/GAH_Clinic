@@ -8,6 +8,14 @@
   let selectedTime = "";
   let modalOpen = false;
 
+  const specialties = ["Massagem", "Fisioterapia", "Psicologia", "Ortopedia"];
+  const doctors = [
+    { id: 1, name: "Pedro Pais" },
+    { id: 2, name: "Afonso Mora" },
+    { id: 3, name: "Mariana Filho" },
+    { id: 4, name: "Carlos Sousa" },
+  ];
+
   async function scheduleAppointment(event) {
     event.preventDefault(); // Prevent default form submission
     try {
@@ -94,7 +102,7 @@
     <div class="card w-full max-w-md bg-base-100 mx-auto flex-1 relative">
       <div class="relative p-4">
         <h3 class="text-2xl font-bold text-primary text-center">
-          Schedule Your Appointment
+          Agendar Consulta
         </h3>
         <button
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -104,7 +112,7 @@
       </div>
       <div class="card-body items-center text-center p-4 pt-0">
         <p class="font-bold text-sm text-base-content">
-          Fill in the details below to set up your appointment.
+          Preencha os detalhes abaixo para agendar sua consulta.
         </p>
         <form on:submit={scheduleAppointment} class="w-full">
           <div class="space-y-3 mt-3">
@@ -112,36 +120,44 @@
               <label
                 for="specialty"
                 class="text-md text-center font-bold text-primary"
-                >Specialty:</label
+                >Especialidade:</label
               >
-              <input
+              <select
                 id="specialty"
-                type="text"
                 bind:value={selectedSpecialty}
-                class="input input-bordered w-full text-base-content"
+                class="select select-bordered w-full text-base-content"
                 required
-              />
+              >
+                <option value="" disabled selected></option>
+                {#each specialties as specialty}
+                  <option value={specialty}>{specialty}</option>
+                {/each}
+              </select>
             </div>
 
             <div>
               <label
                 for="doctor"
                 class="text-md text-center font-bold text-primary"
-                >Doctor:</label
+                >Médico:</label
               >
-              <input
+              <select
                 id="doctor"
-                type="text"
                 bind:value={selectedDoctor}
-                class="input input-bordered w-full text-base-content"
+                class="select select-bordered w-full text-base-content"
                 required
-              />
+              >
+                <option value="" disabled selected></option>
+                {#each doctors as doctor}
+                  <option value={doctor.id}>{doctor.name}</option>
+                {/each}
+              </select>
             </div>
 
             <div>
               <label
                 for="date"
-                class="text-md text-center font-bold text-primary">Date:</label
+                class="text-md text-center font-bold text-primary">Data:</label
               >
               <input
                 id="date"
@@ -155,7 +171,7 @@
             <div>
               <label
                 for="time"
-                class="text-md text-center font-bold text-primary">Time:</label
+                class="text-md text-center font-bold text-primary">Hora:</label
               >
               <input
                 id="time"
@@ -169,7 +185,7 @@
 
           <div class="modal-action mt-4 flex justify-center">
             <button type="submit" class="btn btn-primary flex-1"
-              >Set Appointment</button
+              >Marcar Consulta</button
             >
           </div>
         </form>
