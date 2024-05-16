@@ -7,6 +7,8 @@
   let selectedDate = "";
   let selectedTime = "";
   let modalOpen = false;
+  let isLoading = false;
+  let errorMessage = "";
 
   const specialties = ["Massagem", "Fisioterapia", "Psicologia", "Ortopedia"];
   const doctors = [
@@ -17,16 +19,17 @@
   ];
 
   async function scheduleAppointment(event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
+    isLoading = true;
+    errorMessage = "";
     try {
       const tokenString = localStorage.getItem("jwt");
       if (tokenString) {
         const token = JSON.parse(tokenString);
 
-        // Get date and time from the form
         const specialty = selectedSpecialty;
         const doctorId = parseInt(selectedDoctor);
-        const date = new Date(selectedDate).toISOString().slice(0, 10); // Gets 'YYYY-MM-DD'
+        const date = new Date(selectedDate).toISOString().slice(0, 10);
         const time = selectedTime;
 
         const requestData = JSON.stringify({
@@ -35,8 +38,6 @@
           date,
           time,
         });
-
-        console.log("Request data:", requestData);
 
         const response = await fetch(`${DOMAIN}/book-appointment/`, {
           method: "POST",
@@ -48,14 +49,20 @@
         });
 
         if (!response.ok) {
-          throw new Error("Failed to schedule appointment");
+          if (response.status === 409) {
+            throw new Error("Já existe uma marcação para este horário");
+          }
+          throw new Error("Falha ao agendar consulta");
         }
 
         console.log("Appointment scheduled successfully");
-        closeModal(); // Close the modal after successfully scheduling the appointment
+        closeModal();
       }
     } catch (error) {
+      errorMessage = error.message;
       console.error("Error scheduling appointment:", error.message);
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -65,17 +72,31 @@
 
   function closeModal() {
     modalOpen = false;
+    isLoading = false;
+    errorMessage = "";
+    resetForm();
   }
 
-  // Function to close the modal when clicking outside the modal content
+  function resetForm() {
+    selectedSpecialty = "";
+    selectedDoctor = "";
+    selectedDate = "";
+    selectedTime = "";
+  }
+
   function handleClickOutside(event) {
     if (event.target.id === "modal-overlay") {
       closeModal();
     }
   }
 
+  function handleKeyDownOutside(event) {
+    if (event.key === "Escape" || event.key === "Enter") {
+      closeModal();
+    }
+  }
+
   onMount(() => {
-    // Close modal with ESC key
     function handleKeyDown(event) {
       if (event.key === "Escape") {
         closeModal();
@@ -93,10 +114,13 @@
 </button>
 
 {#if modalOpen}
-  <button
+  <div
     id="modal-overlay"
     class="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center"
     on:click={handleClickOutside}
+    on:keydown={handleKeyDownOutside}
+    tabindex="0"
+    role="button"
     aria-label="Close Modal Overlay"
   >
     <div class="card w-full max-w-md bg-base-100 mx-auto flex-1 relative">
@@ -107,8 +131,34 @@
         <button
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           on:click={closeModal}
-          aria-label="Close Modal">X</button
+          aria-label="Close Modal"
+          disabled={isLoading}
         >
+          {#if isLoading}
+            <svg
+              class="animate-spin h-5 w-5 text-primary"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8h8a8 8 0 11-8 8V4z"
+              ></path>
+            </svg>
+          {:else}
+            X
+          {/if}
+        </button>
       </div>
       <div class="card-body items-center text-center p-4 pt-0">
         <p class="font-bold text-sm text-base-content">
@@ -183,13 +233,30 @@
             </div>
           </div>
 
+          {#if errorMessage}
+            <p class="text-center text-error font-bold mt-3">{errorMessage}</p>
+          {/if}
+
           <div class="modal-action mt-4 flex justify-center">
-            <button type="submit" class="btn btn-primary flex-1"
-              >Marcar Consulta</button
-            >
+            {#if isLoading}
+              <div
+                class="spinner-container flex items-center justify-center h-12 mt-auto"
+              >
+                <l-cardio
+                  size="60"
+                  stroke="4"
+                  speed="0.7"
+                  color="oklch(var(--s))"
+                ></l-cardio>
+              </div>
+            {:else}
+              <button type="submit" class="btn btn-primary flex-1">
+                Marcar Consulta
+              </button>
+            {/if}
           </div>
         </form>
       </div>
     </div>
-  </button>
+  </div>
 {/if}
