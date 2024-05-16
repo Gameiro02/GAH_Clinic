@@ -71,6 +71,7 @@
 
         console.log("Appointment scheduled successfully");
         closeModal();
+        location.reload();
       }
     } catch (error) {
       errorMessage = error.message;
