@@ -53,11 +53,11 @@
   $: data = $appointmentsData;
 </script>
 
-<div class="drawer z-50">
+<div class="drawer">
   <input id="my-drawer" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content">
     <!-- Page content here -->
-    <div class="navbar bg-base-100">
+    <div class="navbar bg-base-100 z-40 relative">
       <div class="navbar-start">
         <label for="my-drawer" class="btn btn-ghost text-secondary btn-circle">
           <svg
@@ -165,3 +165,19 @@
     </ul>
   </div>
 </div>
+
+<!-- Modal for scheduling an appointment -->
+{#if showModal}
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+  >
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <!-- Modal content here -->
+      <h2 class="text-2xl font-bold mb-4">Agendar Consulta</h2>
+      <!-- Add your modal content here -->
+      <button class="btn btn-primary" on:click={() => (showModal = false)}>
+        Fechar
+      </button>
+    </div>
+  </div>
+{/if}
