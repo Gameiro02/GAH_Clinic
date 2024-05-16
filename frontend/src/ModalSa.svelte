@@ -18,6 +18,20 @@
     { id: 4, name: "Carlos Sousa" },
   ];
 
+  function handleTimeChange(event) {
+    const value = event.target.value;
+    const [hours] = value.split(":");
+    selectedTime = `${hours}:00`;
+  }
+
+  function handleFocus(event) {
+    const value = event.target.value;
+    if (value === "") {
+      const [hours] = value.split(":");
+      selectedTime = `${hours}:00`;
+    }
+  }
+
   async function scheduleAppointment(event) {
     event.preventDefault();
     isLoading = true;
@@ -213,6 +227,7 @@
                 id="date"
                 type="date"
                 bind:value={selectedDate}
+                on:input={handleTimeChange}
                 class="input input-bordered w-full text-base-content"
                 required
               />
@@ -228,6 +243,8 @@
                 type="time"
                 bind:value={selectedTime}
                 class="input input-bordered w-full text-base-content"
+                on:input={handleTimeChange}
+                on:focus={handleFocus}
                 required
               />
             </div>
