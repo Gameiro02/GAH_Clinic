@@ -158,26 +158,14 @@
     <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"
     ></label>
     <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-      <li><a class="font-bold" href="/appointmentAdmition">Admissão em Consultas</a></li>
+      <li>
+        <a class="font-bold" href="/appointmentAdmition"
+          >Admissão em Consultas</a
+        >
+      </li>
       <li><a class="font-bold" href="/adminPage">Pagina de Admin</a></li>
       <li><a class="font-bold" href="/aboutUs">Sobre Nós</a></li>
       <li><a class="font-bold" href="/help">Ajuda</a></li>
     </ul>
   </div>
 </div>
-
-<!-- Modal for scheduling an appointment -->
-{#if showModal}
-  <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
-  >
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <!-- Modal content here -->
-      <h2 class="text-2xl font-bold mb-4">Agendar Consulta</h2>
-      <!-- Add your modal content here -->
-      <button class="btn btn-primary" on:click={() => (showModal = false)}>
-        Fechar
-      </button>
-    </div>
-  </div>
-{/if}
