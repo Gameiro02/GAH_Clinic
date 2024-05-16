@@ -8,4 +8,9 @@ export const appointmentsData = writable({
     errorMessage: ''
 });
 
+// Doctos data: doctor contains doctor id and doctor name
+export const doctorsData = writable({
+    doctors: []
+});
+
 export const theme = writable('light');

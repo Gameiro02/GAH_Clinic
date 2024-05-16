@@ -157,3 +157,80 @@ def get_appointment_status(appointment_id, user_id):
     except ClientError as e:
         print(f"Failed to get item from DynamoDB: {e}")
         return {"error": str(e)}
+    
+
+def get_doctors():
+    dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
+    table = dynamodb.Table("Doctors")
+    
+    try:
+        response = table.scan()
+        doctors = response.get('Items', [])
+        return {"status": "success", "doctors": doctors}
+    except Exception as e:
+        print(f"Failed to scan items from DynamoDB: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+rekognition_client = boto3.client('rekognition', region_name='us-east-1')
+
+def search_faces_by_image(source_bytes):
+    try:
+        response = rekognition_client.search_faces_by_image(
+            CollectionId="faces",
+            Image={
+                "Bytes": source_bytes,
+            },
+            MaxFaces=1,
+            FaceMatchThreshold=70,
+            QualityFilter="AUTO"
+        )
+        
+        face_matches = response.get("FaceMatches", [])
+        if face_matches:
+            matched_face = face_matches[0]
+            return {
+                "status": "success",
+                "face_id": matched_face['Face']['FaceId'],
+                "similarity": round(matched_face["Similarity"])
+            }
+        else:
+            return {
+                "status": "error",
+                "message": "No faces matched"
+            }
+            
+    except Exception as e:
+        print(f"Error: {e}")
+        return {
+            "status": "error",
+            "message": "Failed to process image"
+        }
+        
+
+def get_user_by_face_id(face_id):
+    try:
+        dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
+        table = dynamodb.Table("FaceUserID")
+        
+        response = table.query(
+            KeyConditionExpression=Key("faceID").eq(face_id)
+        )
+        items = response.get("Items", [])
+        if items:
+            return {
+                "status": "success",
+                "user_id": items[0]['userID']
+            }
+        else:
+            return {
+                "status": "error",
+                "message": "No user associated with this face ID"
+            }
+            
+    except Exception as e:
+        print(f"Error: {e}")
+        return {
+            "status": "error",
+            "message": "Failed to retrieve user ID"
+        }

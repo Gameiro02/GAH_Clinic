@@ -4,7 +4,7 @@
   import AppointmentsPanel from "./Cards/AppointmentsPanel.svelte";
   import HistoryPanel from "./Cards/HistoryPanel.svelte";
   import { onMount } from "svelte";
-  import { appointmentsData } from "./store.js";
+  import { appointmentsData, doctorsData } from "./store.js";
   import { DOMAIN } from "./config.js";
 
   // Fetch appointments data
@@ -70,7 +70,40 @@
     }
   }
 
-  onMount(fetchAppointments);
+  async function fetchDoctors() {
+    try {
+      const response = await fetch(`${DOMAIN}/doctors/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 500) {
+          throw new Error("Server error. Please try again later");
+        }
+        throw new Error("Failed to fetch doctors");
+      }
+
+      const result = await response.json();
+      if (result.status !== "success" || !Array.isArray(result.doctors)) {
+        throw new Error("Data format error: Expected an array of doctors.");
+      }
+
+      doctorsData.update((data) => {
+        data.doctors = result.doctors;
+        return data;
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  onMount(() => {
+    fetchAppointments();
+    fetchDoctors();
+  });
 </script>
 
 <main class="flex flex-col mx-auto w-screen h-screen px-6 pt2 pb-6">

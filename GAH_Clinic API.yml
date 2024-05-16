@@ -3,7 +3,7 @@ info:
   title: GAH_Clinic API
   version: '1.0'
 servers:
-  - url: http://127.0.0.1:8000/
+  - url: http://localhost:8000/
 paths:
   /admin/:
     get:
@@ -12,7 +12,7 @@ paths:
       responses:
         '200':
           description: OK
-  /auth/login/:
+  /login/:
     post:
       summary: Obtain JWT token
       description: This endpoint allows users to obtain a JWT token by providing valid credentials.

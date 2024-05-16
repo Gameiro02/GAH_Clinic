@@ -1,12 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework import status
 from rest_framework import serializers
 from .utils import aws_services
 from operator import itemgetter
 from .authentication import create_token, decode_token
 from django.contrib.auth import authenticate
+from botocore.exceptions import ClientError
+import boto3
+import base64
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -18,7 +22,7 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
         if user is not None:
             token = create_token(user.id)
-            return Response({"access": token, "user": user.username})
+            return Response({"access": token, "user": user.username, "userId": user.id}, status=200)
         else:
             return Response({"error": "Invalid credentials"}, status=400)
 
@@ -134,3 +138,62 @@ class UserAppointmentsView(APIView):
                 "status": "error",
                 "message": result.get("message", "Failed to retrieve appointments")
             }, status=400)
+            
+
+class DoctorsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = aws_services.get_doctors()
+
+        if result["status"] == "success":
+            return Response({
+                "status": "success",
+                "doctors": result["doctors"]
+            }, status=200)
+        else:
+            return Response({
+                "status": "error",
+                "message": result.get("message", "Failed to retrieve doctors")
+            }, status=400)
+            
+                        
+class ClinicLoginView(APIView):
+    permission_classes = [AllowAny]
+    parser_classes = [JSONParser]
+    
+    def post(self, request, *args, **kwargs):
+        image_data = request.data.get("image")
+        if not image_data:
+            return Response({"error", "No image data provided"}, status=400)
+        
+        try:
+            header, encoded = image_data.split(",", 1)
+            image_bytes = base64.b64decode(encoded)
+            
+        except:
+            return Response({"error": "Invalid image data"}, status=400)
+            
+        result = aws_services.search_faces_by_image(image_bytes)
+        
+        if result["status"] == "success":
+            face_id = result["face_id"]
+            user_result = aws_services.get_user_by_face_id(face_id)
+            
+            if user_result["status"] == "success":
+                return Response({
+                    "message": "Entered in the clinic successfully",
+                    "user_id": user_result["user_id"]
+                }, status=200)
+            else:
+                return Response({
+                    "message": user_result["message"]
+                }, status=404 if user_result["message"] == "No user associated with this face ID" else 500)
+            
+        else:
+            return Response({
+                "message": result["message"]
+                }, status=404 if result["message"] == "No faces matched" else 500)
+        
+        
+                            
