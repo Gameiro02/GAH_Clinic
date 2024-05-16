@@ -138,12 +138,13 @@
               {#each data.missingPaymentAppointments as appointment}
                 <li>
                   <button
-                    class="text-base-content text-left flex items-center gap-2"
+                    class="text-base-content text-center flex items-center gap-2"
                     on:click={() => openModal(appointment)}
                   >
-                    {appointment.specialty} com o Dr. {convertDoctorIdtoName(
-                      appointment.doctorId
-                    )}
+                    {appointment.specialty} com Dr.
+                    <span class="text-secondary">
+                      {convertDoctorIdtoName(appointment.doctorId)}</span
+                    >
                   </button>
                 </li>
               {/each}
