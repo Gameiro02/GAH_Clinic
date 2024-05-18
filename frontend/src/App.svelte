@@ -5,9 +5,10 @@
   import Dashboard from "./Dashboard.svelte";
   import ScheduleAppointment from "./ScheduleAppointment.svelte";
   import FacialRecognition from "./FacialRecognition.svelte";
+  import AboutUs from "./AboutUs.svelte";
 
   onMount(() => {
-    document.documentElement.setAttribute('data-theme', 'cupcake');
+    document.documentElement.setAttribute("data-theme", "cupcake");
     // Redirect to /login if the current window location is the root
     const path = window.location.pathname;
     if (path === "/" || path === "/index.html") {
@@ -21,4 +22,5 @@
   <Route path="/login" component={Login} />
   <Route path="/dashboard" component={Dashboard} />
   <Route path="/schedule-appointment" component={ScheduleAppointment} />
+  <Route path="/about-us" component={AboutUs} />
 </Router>
