@@ -27,7 +27,7 @@ STATE_MACHINE_ARN_WAIT_FOR_PAYMENT = "arn:aws:states:us-east-1:940760857739:stat
 
 # Initialize AWS clients
 dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
-reko_client = boto3.client("rekognition", region_name=AWS_REGION)
+rekognition_client = boto3.client("rekognition", region_name=AWS_REGION)
 
 def process_payment(appointment_id: str, user_id: str) -> Tuple[bool, str]:
     """
