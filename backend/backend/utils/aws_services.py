@@ -191,10 +191,13 @@ def search_faces_by_image(source_bytes: bytes) -> Dict[str, Any]:
             return {"status": "success", "face_id": matched_face['Face']['FaceId'], "similarity": round(matched_face["Similarity"])}
         else:
             return {"status": "error", "message": "No faces matched"}
-            
+    
+    except rekognition_client.exceptions.InvalidParameterException as e:
+        logger.error("There are no faces in the image")
+        return {"status": "error", "message": "No faces found in the image"}
     except Exception as e:
         logger.error(f"Error searching faces by image: {e}")
-        return {"status": "error", "message": "Failed to process image"}
+        return {"status": "error", "message": "Failed to search faces"}
         
 
 def get_user_by_face_id(face_id: str) -> Dict[str, Any]:

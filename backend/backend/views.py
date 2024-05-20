@@ -30,7 +30,7 @@ class LoginView(APIView):
             token = create_token(user.id)
             return Response({"access": token, "user": user.username, "userId": user.id}, status=200)
         else:
-            return create_error_response("Invalid credentials", status.HTTP_400_BAD_REQUEST)
+            return create_error_response("Invalid credentials", status.HTTP_401_UNAUTHORIZED)
 
 class AppointmentSerializer(serializers.Serializer):
     specialty = serializers.CharField(required=True)
@@ -51,8 +51,8 @@ class BookAppointmentView(APIView):
         if result["success"]:
             return Response({
                 "status": "success",
-                "message": result["message"],
                 "appointment_id": result["appointment_id"],
+                "message": result["message"],
             }, status=201)
         else:
             return self.handle_booking_error(result)
@@ -72,9 +72,12 @@ class ProcessPaymentView(APIView):
     def post(self, request):
         appointment_id = request.data.get("appointment_id")
         user_id = request.user.id
+        
+        if not user_id:
+            return create_error_response("Unauthorized, token missing or invalid", status.HTTP_401_UNAUTHORIZED)
 
-        if not appointment_id or not user_id:
-            return create_error_response("Appointment ID or User ID is required", status.HTTP_400_BAD_REQUEST)
+        if not appointment_id:
+            return create_error_response("Appointment ID required", status.HTTP_400_BAD_REQUEST)
         
         if self.process_payment(appointment_id):
             return self.update_payment_status(appointment_id, user_id)
@@ -161,8 +164,7 @@ class ClinicLoginView(APIView):
     
     def decode_image_data(self, image_data):
         try:
-            header, encoded = image_data.split(",", 1)
-            return base64.b64decode(encoded)
+            return base64.b64decode(image_data)
         except Exception as e:
             return None
         
@@ -177,6 +179,8 @@ class ClinicLoginView(APIView):
         
     def handle_face_recognition_failure(self, result):
         message = result["message"]
+        if message == "No faces found in the image":
+            return create_error_response("No faces found in the image", status.HTTP_400_BAD_REQUEST)
         return create_error_response(message, status.HTTP_404_NOT_FOUND if message == "No faces matched" else status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         
