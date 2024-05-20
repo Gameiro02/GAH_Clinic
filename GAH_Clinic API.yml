@@ -51,10 +51,8 @@ paths:
                   user:
                     type: string
                     description: The username of the user
-        '400':
-          description: Bad request, invalid input 
         '401':
-          description: Unauthorized, incorrect username or password
+          description: Invalid credentials
   /book-appointment/:
     post:
       summary: Book an appointment
@@ -71,7 +69,7 @@ paths:
                 specialty:
                   type: string
                   description: The specialty of the doctor required for the appointment.
-                  example: "Dermatology"
+                  example: "Massagem"
                 doctorId:
                   type: integer
                   description: The identifier for the doctor with whom the appointment is to be booked.
@@ -85,7 +83,7 @@ paths:
                   type: string
                   format: time
                   description: The time when the appointment starts, must be on the hour (e.g., 14:00).
-                  example: "15:00:00"
+                  example: "15:00"
       responses:
         '201':
           description: Appointment booked successfully
@@ -94,6 +92,10 @@ paths:
               schema:
                 type: object
                 properties:
+                  status:
+                    type: string
+                    description: The status of the request
+                    example: success
                   appointment_id:
                     type: integer
                     description: The unique identifier of the booked appointment.
@@ -130,8 +132,47 @@ paths:
                     example: "An appointment already exists at this date and time."
         '500':
           description: Internal Server Error
-        '503':
-          description: Service Unavailable
+  /payment/:
+    post:
+      summary: Process payment for a booked appointment
+      description: This endpoint processess payments for appointments and must be completed within 30 minutes of booking.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                appointment_id:
+                  type: string
+                  description: The identifier of the booked appointment.
+                  example: uniqueId1
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the payment process.
+                    example: "Success"
+                  message:
+                    type: string
+                    description: A message detailing the result of the payment operation.
+                    example: "Payment has been processed successfully."
+        '400':
+          description: Payment processing failed
+        '401':
+          description: Unauthorized, token missing or invalid
+        '409':
+          description: Payment already made
+        '500':
+          description: Internal Server Error
   /user/appointments/:
     get:
       summary: Retrieve all appointments for the autenticated user
@@ -182,45 +223,6 @@ paths:
                       type: string
                       description: The name of the doctor
                       example: "Maria Filho"
-        '401':
-          description: Unauthorized, token missing or invalid
-        '500':
-          description: Internal Server Error
-  /payment/:
-    post:
-      summary: Process payment for a booked appointment
-      description: This endpoint processess payments for appointments and must be completed within 30 minutes of booking.
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                appointment_id:
-                  type: string
-                  description: The identifier of the booked appointment.
-                  example: uniqueId1
-      responses:
-        '200':
-          description: Payment processed successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The status of the payment process.
-                    example: "Success"
-                  message:
-                    type: string
-                    description: A message detailing the result of the payment operation.
-                    example: "Payment has been processed successfully."
-        '400':
-          description: Invalid payment details provided
         '401':
           description: Unauthorized, token missing or invalid
         '500':
