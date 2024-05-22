@@ -31,7 +31,7 @@
   <Navbar />
   <div class="flex flex-col flex-grow space-y-5">
     <div class="welcome">
-      <WelcomePanel userName={selectedDoctor ? selectedDoctor.name : "Loading..."} />
+      <WelcomePanel userRole={"doctor"} userName={selectedDoctor ? selectedDoctor.name : "Loading..."} />
     </div>
     <!-- <div class="flex flex-col flex-grow md:flex-row space-y-5 md:space-y-0 md:space-x-5">
         <HistoryPanel />

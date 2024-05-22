@@ -13,16 +13,13 @@
       const tokenString = localStorage.getItem("jwt");
       if (tokenString) {
         const token = JSON.parse(tokenString);
-        const response = await fetch(
-          `${DOMAIN}/user/appointments/`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${DOMAIN}/user/appointments/`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           if (response.status === 401) {
@@ -34,25 +31,14 @@
         }
 
         const result = await response.json();
-        if (
-          result.status !== "success" ||
-          !Array.isArray(result.appointments)
-        ) {
-          throw new Error(
-            "Data format error: Expected an array of appointments."
-          );
+        if (result.status !== "success" || !Array.isArray(result.appointments)) {
+          throw new Error("Data format error: Expected an array of appointments.");
         }
 
         appointmentsData.update((data) => {
-          data.upcomingAppointments = result.appointments.filter(
-            (app) => app.status !== "finished"
-          );
-          data.pastAppointments = result.appointments.filter(
-            (app) => app.status === "finished"
-          );
-          data.missingPaymentAppointments = result.appointments.filter(
-            (app) => app.status === "waiting for payment"
-          );
+          data.upcomingAppointments = result.appointments.filter((app) => app.status !== "finished");
+          data.pastAppointments = result.appointments.filter((app) => app.status === "finished");
+          data.missingPaymentAppointments = result.appointments.filter((app) => app.status === "waiting for payment");
           data.isLoading = false;
           data.errorMessage = "";
           return data;
@@ -110,7 +96,7 @@
   <Navbar />
   <div class="flex flex-col flex-grow space-y-5">
     <div class="welcome">
-      <WelcomePanel userName={localStorage.getItem("user")} />
+      <WelcomePanel userRole={"user"} userName={localStorage.getItem("user")} />
     </div>
     <div class="flex flex-col flex-grow md:flex-row space-y-5 md:space-y-0 md:space-x-5">
       <HistoryPanel />
