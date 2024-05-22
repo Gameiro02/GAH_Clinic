@@ -1,6 +1,7 @@
 <script>
   import { writable } from "svelte/store";
   import { cardio } from "ldrs";
+  import { onMount } from "svelte";
 
   cardio.register();
 
@@ -15,7 +16,7 @@
         specialty: "Massagem",
         time: "10:00",
         doctorId: 2,
-        doctorName: "Mariana Filho",
+        doctorName: "Afonso Mora",
       },
       {
         date: "2024-06-05",
@@ -59,8 +60,8 @@
         status: "completed",
         specialty: "Pediatria",
         time: "13:00",
-        doctorId: 3,
-        doctorName: "Mariana Filho",
+        doctorId: 2,
+        doctorName: "Afonso Mora",
       },
     ],
     missingPaymentAppointments: [],
@@ -68,16 +69,23 @@
     errorMessage: "",
   });
 
-  const doctorId = 3; // Defina o ID do médico específico aqui
-
   function getDoctorPastAppointments(doctorId) {
     const data = $appointmentsData;
-    return data.pastAppointments.filter((appointment) => appointment.doctorId === doctorId);
+    return data.pastAppointments.filter((appointment) => appointment.doctorId === parseInt(doctorId));
   }
 
-  $: filteredAppointments = getDoctorPastAppointments(doctorId);
+  let doctorId;
+  let filteredAppointments = [];
+
+  onMount(() => {
+    // Get the id from the last part of the URL
+    const url = window.location.href;
+    doctorId = url.substring(url.lastIndexOf("/") + 1);
+    filteredAppointments = getDoctorPastAppointments(doctorId);
+  });
 
   $: data = $appointmentsData;
+  $: filteredAppointments = getDoctorPastAppointments(doctorId);
 </script>
 
 <div class="card w-full bg-base-200 shadow-base-100 shadow-2xl flex-1">
@@ -108,7 +116,6 @@
                 <tr class="hover:bg-primary bg-base-300">
                   <td class="text-base-content text-center font-medium rounded-l-full py-4">{appointment.specialty}</td>
                   <td class="text-base-content text-center font-medium py-4">{appointment.userName}</td>
-                  <!-- Ajuste para exibir o nome do paciente -->
                   <td class="text-base-content text-center font-medium py-4">{appointment.date}</td>
                   <td class="text-base-content text-center font-medium rounded-r-full py-4">{appointment.time}</td>
                 </tr>
