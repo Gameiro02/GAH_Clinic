@@ -1,6 +1,7 @@
 <script>
   import { appointmentsData, theme } from "./store.js";
   import Payment from "./Payment.svelte";
+  import { onMount } from "svelte";
 
   let showNotification = false;
 
@@ -15,7 +16,20 @@
     return Object.keys(doctorIdMap).find((key) => doctorIdMap[key] === doctorId);
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  let selectedAppointment = null;
+  let showModal = false;
+
+  function openModal(appointment) {
+    selectedAppointment = appointment;
+    showModal = false;
+    requestAnimationFrame(() => {
+      showModal = true;
+    });
+  }
+
+  $: data = $appointmentsData;
+
+  onMount(() => {
     const themeToggle = document.querySelector(".theme-controller");
     themeToggle.addEventListener("change", function () {
       if (this.checked) {
@@ -34,19 +48,6 @@
       //console.log("showNotification : ", showNotification);
     });
   });
-
-  let selectedAppointment = null;
-  let showModal = false;
-
-  function openModal(appointment) {
-    selectedAppointment = appointment;
-    showModal = false;
-    requestAnimationFrame(() => {
-      showModal = true;
-    });
-  }
-
-  $: data = $appointmentsData;
 </script>
 
 <div class="drawer">
@@ -98,7 +99,7 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002,0,00-4-5.659V5a2 2,0,10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0,11-6 0v-1m6 0H9"
                 ></path>
               </svg>
               {#if data.missingPaymentAppointments.length > 0}
@@ -109,10 +110,14 @@
           {#if showNotification}
             <ul class="dropdown-content z-[1] relative right-0 menu p-2 shadow bg-base-100 rounded-box w-72">
               {#if data.missingPaymentAppointments.length === 0}
-                <li class="menu-title text-primary font-bold text-lg text-center justify-center">Não tem notificações</li>
+                <li class="menu-title text-primary font-bold text-lg text-center justify-center">
+                  Não tem notificações
+                </li>
               {:else}
                 <div class="por-pagar">
-                  <li class="menu-title text-primary font-bold text-lg text-center justify-center">Consultas por Pagar</li>
+                  <li class="menu-title text-primary font-bold text-lg text-center justify-center">
+                    Consultas por Pagar
+                  </li>
                   {#each data.missingPaymentAppointments as appointment}
                     <li>
                       <button
@@ -133,7 +138,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="drawer-side z-50">
     <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content flex flex-col items-center">
@@ -147,5 +152,5 @@
         <li><a class="font-bold text-lg" href="/about-us">Sobre Nós</a></li>
       </div>
     </ul>
-  </div>  
+  </div>
 </div>
