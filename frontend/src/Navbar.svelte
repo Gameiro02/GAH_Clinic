@@ -134,7 +134,7 @@
       <li>
         <a class="font-bold" href="/appointmentAdmition">Admissão em Consultas</a>
       </li>
-      <li><a class="font-bold" href="/adminPage">Pagina de Admin</a></li>
+      <li><a class="font-bold" href="/doctor-area">Área Médica</a></li>
       <li><a class="font-bold" href="/about-us">Sobre Nós</a></li>
     </ul>
   </div>

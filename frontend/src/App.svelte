@@ -5,6 +5,7 @@
   import Dashboard from "./Dashboard.svelte";
   import FacialRecognition from "./FacialRecognition.svelte";
   import AboutUs from "./AboutUs.svelte";
+  import DoctorLogin from "./DoctorLogin.svelte";
 
   onMount(() => {
     document.documentElement.setAttribute("data-theme", "cupcake");
@@ -21,4 +22,5 @@
   <Route path="/login" component={Login} />
   <Route path="/dashboard" component={Dashboard} />
   <Route path="/about-us" component={AboutUs} />
+  <Route path="/doctor-area" component={DoctorLogin} />
 </Router>

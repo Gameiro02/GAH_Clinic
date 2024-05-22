@@ -15,12 +15,12 @@
     <div class="card w-full bg-base-200 shadow-lg rounded-lg overflow-hidden h-[80vh] lg:h-[80vh] mt-4 lg:mt-0">
       <div class="card-body flex flex-col lg:flex-row p-6 h-full">
         <div class="about-us flex-1 pr-0 lg:pr-4 overflow-auto">
-          <h2 class="card-title text-secondary text-4xl pb-4 mb-4">Sobre Nós</h2>
-          <p class="text-lg leading-relaxed mb-4 text-justify text-base-content">
+          <h2 class="card-title text-secondary text-4xl pb-4 mb-4 ml-2">Sobre Nós</h2>
+          <p class="text-lg leading-relaxed mb-4 ml-4 text-justify text-base-content">
             Somos uma clínica de bem-estar e fisioterapia dedicada a proporcionar o melhor cuidado para nossos
             pacientes.
           </p>
-          <p class="text-lg leading-relaxed mb-1 text-justify text-base-content">
+          <p class="text-lg leading-relaxed mb-1 ml-4 text-justify text-base-content">
             Conheça nossas especialidades e o nosso corpo clinico:
           </p>
           <div class="collapse collapse-arrow bg-base-200">
@@ -67,25 +67,16 @@
         <div class="w-full lg:w-1/3 pt-4 lg:pt-0 lg:pl-4 flex items-stretch">
           <div class="carousel rounded-box shadow-md w-full h-64 lg:h-full">
             <div class="carousel-item w-full h-full">
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.jpg"
-                class="w-full h-full object-cover"
-                alt="Carrossel de Imagens"
-              />
+              <img src="/photo-mariana-filho.jpeg" class="w-full h-full object-cover" alt="Carrossel de Imagens" />
             </div>
             <div class="carousel-item w-full h-full">
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.jpg"
-                class="w-full h-full object-cover"
-                alt="Carrossel de Imagens"
-              />
+              <img src="/photo-afonso-mora.jpeg" class="w-full h-full object-cover" alt="Carrossel de Imagens" />
             </div>
             <div class="carousel-item w-full h-full">
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.jpg"
-                class="w-full h-full object-cover"
-                alt="Carrossel de Imagens"
-              />
+              <img src="/photo-pedro-pais.jpeg" class="w-full h-full object-cover" alt="Carrossel de Imagens" />
+            </div>
+            <div class="carousel-item w-full h-full">
+              <img src="/photo-carlos-sousa.jpeg" class="w-full h-full object-cover" alt="Carrossel de Imagens" />
             </div>
           </div>
         </div>
