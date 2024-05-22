@@ -12,7 +12,8 @@
 
   function handleLogin() {
     if (selectedDoctor) {
-      alert(`Doctor ${selectedDoctor.name} logged in!`);
+      // redirect to the doctor's dashboard
+      window.location.href = "/doctor-dashboard/" + selectedDoctor.id;
     } else {
       alert("Please select a doctor.");
     }
@@ -23,7 +24,7 @@
     if (selectedDoctor) {
       return `/photo-${selectedDoctor.name.toLowerCase().replace(" ", "-")}.jpeg`;
     } else {
-      return "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg";
+      return "/photo-afonso-mora.jpeg";
     }
   }
 
@@ -45,7 +46,7 @@
       <div class="flex flex-col items-center">
         <div class="avatar mb-8">
           <div class="w-52 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img alt="doctor face" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+            <img alt="doctor face" src="" />
           </div>
         </div>
         <div class="mb-8 text-center">
