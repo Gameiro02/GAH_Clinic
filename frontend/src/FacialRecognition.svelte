@@ -1,18 +1,24 @@
 <script>
-  import { onMount } from "svelte";
   import { DOMAIN } from "./config.js";
   import Navbar from "./Navbar.svelte";
+  import { pulsar } from 'ldrs'
+
+  pulsar.register();
 
   let video;
   let canvas;
   let error = "";
   let isVideoReady = false;
+  let showVideo = false;
+  let loggedIn = false;
 
-  // Get access to the camera
-  onMount(() => {
+  function startCamera() {
+    showVideo = true;
+
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then((stream) => {
+        video = document.createElement("video");
         video.srcObject = stream;
         video.play();
         video.onloadedmetadata = () => {
@@ -24,7 +30,7 @@
         console.error("Error accessing the camera: " + err);
         error = "Error accessing the camera: " + err.message;
       });
-  });
+  }
 
   // Function to continuously capture images
   function startCapture() {
@@ -53,7 +59,14 @@
         const data = await response.json();
         if (response.ok) {
           clearInterval(captureInterval); // Stop capturing once logged in
-          alert(data.message);
+          video.srcObject.getTracks().forEach((track) => track.stop());
+          error = "";
+          showVideo = false;
+          loggedIn = true;
+
+          setTimeout(() => {
+            window.location.href = "/appointments";
+          }, 1250);
         } else {
           error = data.message;
           console.log("Login attempt failed: ", data.message);
@@ -61,29 +74,43 @@
       } catch (err) {
         console.error("Error: " + err.message);
       }
-    }, 1000); // Capture every second
+    }, 2500); // Capture every second
   }
 </script>
 
-<div class="flex flex-col min-h-screen bg-base-100">
+<div class="flex flex-col h-screen bg-base-100">
   <Navbar />
-  <div class="flex flex-col items-center justify-center flex-1 mt-[-3rem]">
-    <div class="p-8 rounded-lg shadow-lg bg-base-200 w-full max-w-4xl">
-      <h1 class="text-2xl font-bold mb-4">Webcam Login</h1>
-      {#if error}
-        <div class="text-red-500 mb-4">{error}</div>
-      {/if}
-      <div class="w-full flex justify-center bg-base-100">
-        <video bind:this={video} width="800" height="600">
-          <track kind="captions" src="" srclang="en" label="English" default />
-        </video>
+  <div class="flex justify-center h-screen items-center">
+    <div class="card w-96 h-80 max-w-sm shadow-2xl bg-base-200">
+      <div class="card-body flex flex-col justify-between items-stretch w-full h-full flex-1">
+        <h2 class="card-title justify-center text-secondary text-3xl">Facial Recognition</h2>
+        <div class="flex flex-col flex-grow justify-center items-center">
+          {#if !showVideo}
+            {#if !loggedIn}
+              <button on:click={startCamera} class="btn w-40 btn-primary text justify-center">Start Webcam</button>
+            {:else}
+              <div class="text-center font-bold text-2xl  text-primary">Logged in</div>
+              <div class="text-center">Redirecting you to the clinic...</div>
+            {/if}
+          {:else}
+            {#if !loggedIn}
+              <div class="text-center font-semibold text-lg mb-4">Looking for your face...</div>
+              <div class="spinner-container">
+                <l-pulsar
+                  size="40"
+                  speed="1.75" 
+                  color="oklch(var(--s))" 
+                ></l-pulsar>
+              </div>
+            {/if}
+          {/if}
+        </div>
+        {#if error}
+          <div class="text-red-500 text-center">{error}</div>
+        {:else}
+          <div class="text-center invisible">Temp</div>
+        {/if}
       </div>
     </div>
   </div>
 </div>
-
-<style>
-  video {
-    max-width: 100%;
-  }
-</style>

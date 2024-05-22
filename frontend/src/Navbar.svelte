@@ -68,7 +68,7 @@
         </label>
       </div>
       <div class="navbar-center">
-        <div class="btn btn-ghost text-secondary text-3xl">GAH Clinic</div>
+        <div><a class="btn btn-ghost text-secondary text-3xl" href="/dashboard">GAH Clinic</a></div>
       </div>
       <div class="navbar-end flex">
         <label class="swap swap-rotate">
