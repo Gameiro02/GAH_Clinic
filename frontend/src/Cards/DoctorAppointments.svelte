@@ -5,11 +5,40 @@
 
   cardio.register();
 
+  // DADOS DE EXEMPLO ESTATICOS
   const users = [
     { id: 1, name: "Alice" },
     { id: 2, name: "Bob" },
-    // Adicione outros usuários aqui
   ];
+
+  const appointmentsData = writable({
+    upcomingAppointments: [
+      {
+        date: "2024-06-01",
+        appointmentId: "32ba3b0b-90bb-49cd-b2f8-204a314e78fa",
+        userId: 1,
+        status: "scheduled",
+        specialty: "Massagem",
+        time: "10:00",
+        doctorId: 2,
+        doctorName: "Mariana Filho",
+      },
+      {
+        date: "2024-06-05",
+        appointmentId: "39797f7a-b10f-4ffd-b2c7-c17974db49dd",
+        userId: 2,
+        status: "scheduled",
+        specialty: "Fisioterapia",
+        time: "11:00",
+        doctorId: 3,
+        doctorName: "Mariana Filho",
+      },
+    ],
+    pastAppointments: [],
+    missingPaymentAppointments: [],
+    isLoading: false,
+    errorMessage: "",
+  });
 
   function getUserName(userId) {
     const user = users.find((user) => user.id === userId);
@@ -42,35 +71,6 @@
     });
     closeModal();
   }
-
-  const appointmentsData = writable({
-    upcomingAppointments: [
-      {
-        date: "2024-06-01",
-        appointmentId: "32ba3b0b-90bb-49cd-b2f8-204a314e78fa",
-        userId: 1,
-        status: "scheduled",
-        specialty: "Massagem",
-        time: "10:00",
-        doctorId: 2,
-        doctorName: "Mariana Filho",
-      },
-      {
-        date: "2024-06-05",
-        appointmentId: "39797f7a-b10f-4ffd-b2c7-c17974db49dd",
-        userId: 2,
-        status: "scheduled",
-        specialty: "Fisioterapia",
-        time: "11:00",
-        doctorId: 3,
-        doctorName: "Mariana Filho",
-      },
-    ],
-    pastAppointments: [],
-    missingPaymentAppointments: [],
-    isLoading: false,
-    errorMessage: "",
-  });
 
   $: data = $appointmentsData;
   $: themeColor = $theme;

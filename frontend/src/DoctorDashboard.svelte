@@ -2,9 +2,8 @@
   import { onMount } from "svelte";
   import WelcomePanel from "./WelcomePanel.svelte";
   import Navbar from "./Navbar.svelte";
-  import HistoryPanel from "./Cards/HistoryPanel.svelte";
-  import AppointmentsPanel from "./Cards/AppointmentsPanel.svelte";
   import DoctorAppointments from "./Cards/DoctorAppointments.svelte";
+  import DoctorHistoryPanel from "./Cards/DoctorHistoryPanel.svelte";
 
   let selectedDoctor = null;
   const doctors = [
@@ -36,7 +35,7 @@
       <WelcomePanel userRole={"doctor"} userName={selectedDoctor ? selectedDoctor.name : "Loading..."} />
     </div>
     <div class="flex flex-col flex-grow md:flex-row space-y-5 md:space-y-0 md:space-x-5">
-      <HistoryPanel />
+      <DoctorHistoryPanel />
       <DoctorAppointments />
     </div>
   </div>
