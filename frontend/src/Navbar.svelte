@@ -107,19 +107,25 @@
             </div>
           </div>
           {#if showNotification}
-            <ul class="dropdown-content z-[1] relative right-0 menu p-2 shadow bg-base-100 rounded-box w-52">
-              <li class="menu-title text-primary text-center justify-center">Consultas por Pagar</li>
-              {#each data.missingPaymentAppointments as appointment}
-                <li>
-                  <button
-                    class="text-base-content text-center flex items-center gap-2"
-                    on:click={() => openModal(appointment)}
-                  >
-                    {appointment.specialty} com Dr.
-                    <span class="text-secondary"> {convertDoctorIdtoName(appointment.doctorId)}</span>
-                  </button>
-                </li>
-              {/each}
+            <ul class="dropdown-content z-[1] relative right-0 menu p-2 shadow bg-base-100 rounded-box w-72">
+              {#if data.missingPaymentAppointments.length === 0}
+                <li class="menu-title text-primary font-bold text-lg text-center justify-center">Não tem notificações</li>
+              {:else}
+                <div class="por-pagar">
+                  <li class="menu-title text-primary font-bold text-lg text-center justify-center">Consultas por Pagar</li>
+                  {#each data.missingPaymentAppointments as appointment}
+                    <li>
+                      <button
+                        class="text-base-content text-center flex items-center justify-center gap-2"
+                        on:click={() => openModal(appointment)}
+                      >
+                        {appointment.specialty} com
+                        <span class="text-secondary">{convertDoctorIdtoName(appointment.doctorId)}</span>
+                      </button>
+                    </li>
+                  {/each}
+                </div>
+              {/if}
             </ul>
           {/if}
           <Payment appointment={selectedAppointment} {showModal} />
@@ -127,15 +133,19 @@
       </div>
     </div>
   </div>
+  
   <div class="drawer-side z-50">
     <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-      <li><a class="font-bold" href="/dashboard">Dashboard</a></li>
-      <li>
-        <a class="font-bold" href="/appointmentAdmition">Admissão em Consultas</a>
-      </li>
-      <li><a class="font-bold" href="/doctor-area">Área Médica</a></li>
-      <li><a class="font-bold" href="/about-us">Sobre Nós</a></li>
+    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content flex flex-col items-center">
+      <img src="/logo.png" alt="GAH Clinic" class="w-25 h-20 mt-10" />
+      <div class="flex flex-col flex-grow items-center justify-start py-4 mt-32">
+        <li class="mb-2"><a class="font-bold text-lg" href="/dashboard">Dashboard</a></li>
+        <li class="mb-2">
+          <a class="font-bold text-lg" href="/appointmentAdmition">Admissão em Consultas</a>
+        </li>
+        <li class="mb-2"><a class="font-bold text-lg" href="/doctor-area">Área Médica</a></li>
+        <li><a class="font-bold text-lg" href="/about-us">Sobre Nós</a></li>
+      </div>
     </ul>
-  </div>
+  </div>  
 </div>

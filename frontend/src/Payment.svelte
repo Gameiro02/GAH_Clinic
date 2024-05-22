@@ -48,7 +48,10 @@
         }
 
         sucessfullMessage = "Pagamento realizado com sucesso";
-        console.log("Payment made successfully");
+        // 2 second timeout
+        setTimeout(() => {
+          location.reload();
+        }, 3000);
       }
     } catch (error) {
       if (error.message === "Payment already made") {

@@ -181,7 +181,7 @@ class ClinicLoginView(APIView):
         message = result["message"]
         if message == "No faces found in the image":
             return create_error_response("No faces found in the image", status.HTTP_400_BAD_REQUEST)
-        return create_error_response(message, status.HTTP_404_NOT_FOUND if message == "No faces matched" else status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return create_error_response(message, status.HTTP_404_NOT_FOUND if message == "Unrecognized user" else status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         
                             
