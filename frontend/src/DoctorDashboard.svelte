@@ -2,6 +2,9 @@
   import { onMount } from "svelte";
   import WelcomePanel from "./WelcomePanel.svelte";
   import Navbar from "./Navbar.svelte";
+  import HistoryPanel from "./Cards/HistoryPanel.svelte";
+  import AppointmentsPanel from "./Cards/AppointmentsPanel.svelte";
+  import DoctorAppointments from "./Cards/DoctorAppointments.svelte";
 
   let selectedDoctor = null;
   const doctors = [
@@ -18,7 +21,6 @@
 
     // Get the doctor object from the id
     selectedDoctor = doctors.find((doctor) => doctor.id == id);
-    console.log(selectedDoctor);
 
     // Handle case where doctor is not found
     if (!selectedDoctor) {
@@ -33,9 +35,9 @@
     <div class="welcome">
       <WelcomePanel userRole={"doctor"} userName={selectedDoctor ? selectedDoctor.name : "Loading..."} />
     </div>
-    <!-- <div class="flex flex-col flex-grow md:flex-row space-y-5 md:space-y-0 md:space-x-5">
-        <HistoryPanel />
-        <AppointmentsPanel />
-      </div> -->
+    <div class="flex flex-col flex-grow md:flex-row space-y-5 md:space-y-0 md:space-x-5">
+      <HistoryPanel />
+      <DoctorAppointments />
+    </div>
   </div>
 </main>

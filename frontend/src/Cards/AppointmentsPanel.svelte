@@ -1,6 +1,6 @@
 <script>
   import { appointmentsData, theme } from "../store.js";
-  import { cardio } from 'ldrs'
+  import { cardio } from "ldrs";
   import Payment from "../Payment.svelte";
 
   cardio.register();
@@ -19,21 +19,22 @@
   }
 
   $: data = $appointmentsData;
+  $: console.log(data);
+
   $: themeColor = $theme;
 </script>
 
-<div class="card w-full bg-base-200 shadow-2xl shadow-base-100 flex-1 ${themeColor === 'dark' ? 'shadow-white' : 'shadow-black'}">
+<div
+  class="card w-full bg-base-200 shadow-2xl shadow-base-100 flex-1 ${themeColor === 'dark'
+    ? 'shadow-white'
+    : 'shadow-black'}"
+>
   <div class="card-body items-center text-center p-1">
     <h2 class="card-title text-secondary text-3xl mb-2 mt-4">Próximas Consultas</h2>
     <div class="appointments flex flex-col h-full w-full">
       {#if data.isLoading}
         <div class="spinner-container flex items-center justify-center mt-20">
-          <l-cardio
-            size="150"
-            stroke="10"
-            speed="0.7"
-            color="oklch(var(--s))"
-          ></l-cardio>
+          <l-cardio size="150" stroke="10" speed="0.7" color="oklch(var(--s))"></l-cardio>
         </div>
       {:else if data.errorMessage}
         <p class="error text-error text-center font-bold text-xl mt-16">{data.errorMessage}</p>
@@ -52,18 +53,20 @@
             </thead>
             <tbody>
               {#each data.upcomingAppointments as appointment, index}
-              <tr class="{appointment.status === 'waiting for payment' ? 'bg-accent' : 'bg-base-300'} hover:bg-primary"
+                <tr
+                  class="{appointment.status === 'waiting for payment' ? 'bg-accent' : 'bg-base-300'} hover:bg-primary"
                   on:click={() => openModal(appointment)}
-                  style="cursor: pointer;">
-                <td class="text-base-content text-center font-medium rounded-l-full py-4">{appointment.specialty}</td>
-                <td class="text-base-content text-center font-medium py-4">{appointment.doctorName}</td>
-                <td class="text-base-content text-center font-medium py-4">{appointment.date}</td>
-                <td class="text-base-content text-center font-medium rounded-r-full py-4">{appointment.time}</td>
-              </tr>
-            {/each}
+                  style="cursor: pointer;"
+                >
+                  <td class="text-base-content text-center font-medium rounded-l-full py-4">{appointment.specialty}</td>
+                  <td class="text-base-content text-center font-medium py-4">{appointment.doctorName}</td>
+                  <td class="text-base-content text-center font-medium py-4">{appointment.date}</td>
+                  <td class="text-base-content text-center font-medium rounded-r-full py-4">{appointment.time}</td>
+                </tr>
+              {/each}
             </tbody>
           </table>
-          <Payment appointment={selectedAppointment} showModal={showModal}/>
+          <Payment appointment={selectedAppointment} {showModal} />
         </div>
       {/if}
     </div>
