@@ -85,26 +85,6 @@ def book_appointment(user_id: str, specialty: str, doctorId: int, date: str, tim
     except Exception as e:
         logger.error(f"Error booking appointment: {e}")
         return {"success": False, "message": str(e)}
-    
-def start_payment_workflow(appointment_id: str, user_id: str) -> Dict[str, Any]:
-    """
-    Start the payment workflow for the appointment.
-
-    :param appointment_id: ID of the appointment
-    :param user_id: ID of the user
-    :return: Dictionary with workflow status and message
-    """
-    try:
-        sfn_client = boto3.client("stepfunctions")
-        input_data = {"appointment_id": appointment_id, "user_id": user_id}
-        sfn_response = sfn_client.start_execution(
-            stateMachineArn=STATE_MACHINE_ARN_WAIT_FOR_PAYMENT,
-            input=json.dumps(input_data)
-        )
-        return {"success": "True", "message": "Appointment bookend and payment workflow started successfully", "executionArn": sfn_response["executionArn"]}
-    except Exception as e:
-        logger.error(f"Failed to start payment workflow: {e}")
-        return {"success": False, "message": f"Failed to start workflow: {str(e)}"}
         
 def get_user_appointments(user_id: str) -> Dict[str, Any]:
     """
