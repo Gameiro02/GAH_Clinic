@@ -4,6 +4,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
+    "prestart": "chmod +x /var/app/current/node_modules/.bin/sirv",
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public --single"

@@ -75,6 +75,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://localhost:8000",
     "http://gah-clinic-web.eba-6fgtpcwm.us-east-1.elasticbeanstalk.com",
     "http://frontend-v2.eba-6fgtpcwm.us-east-1.elasticbeanstalk.com",
 ]
