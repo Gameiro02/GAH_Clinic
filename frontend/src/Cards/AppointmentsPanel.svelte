@@ -39,7 +39,7 @@
       {:else if data.errorMessage}
         <p class="error text-error text-center font-bold text-xl mt-16">{data.errorMessage}</p>
       {:else if data.upcomingAppointments.length === 0}
-        <p class="info text-info text-center font-bold text-xl mt-16">Não tens nenhuma consulta agendada.</p>
+        <p class="info text-accent text-center font-bold text-xl mt-16">Não tens nenhuma consulta agendada.</p>
       {:else}
         <div class="overflow-y-auto max-h-96">
           <table class="table w-full min-w-full bg-base-200 border-separate border-spacing-y-2">

@@ -90,7 +90,7 @@
           {data.errorMessage}
         </p>
       {:else if data.upcomingAppointments.length === 0}
-        <p class="info text-info text-center font-bold text-xl mt-16">
+        <p class="info text-accent text-center font-bold text-xl mt-16">
           Não tens nenhuma consulta agendada.
         </p>
       {:else}

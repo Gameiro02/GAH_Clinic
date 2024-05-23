@@ -64,9 +64,6 @@
           showVideo = false;
           loggedIn = true;
 
-          setTimeout(() => {
-            window.location.href = "/appointments";
-          }, 1250);
         } else {
           error = data.message;
           console.log("Login attempt failed: ", data.message);
