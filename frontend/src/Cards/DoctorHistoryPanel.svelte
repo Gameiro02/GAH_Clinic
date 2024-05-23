@@ -6,8 +6,13 @@
   cardio.register();
 
   const users = [
-    { id: 1, name: "Alice" },
-    { id: 2, name: "Bob" },
+    { id: 1, name: "userTeste" },
+    { id: 2, name: "jubileu" },
+    { id: 3, name: "Cristiano" },
+    { id: 4, name: "Cristiano" },
+    { id: 5, name: "Lobo" },
+    { id: 6, name: "RafaBoneco" },
+    { id: 7, name: "gameiro" },
   ];
 
   function getUserName(userId) {
