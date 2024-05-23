@@ -133,6 +133,47 @@ def get_appointment_status(appointment_id: str, user_id: str) -> Dict[str, Any]:
         logger.error(f"Failed to get item from DynamoDB: {e}")
         return {"error": str(e)}
     
+def finish_appointment(appointment_id: str, user_id: int) -> Dict[str, Any]:
+    """
+    Finish an appointment.
+    
+    :param appointment_id: ID of the appointment
+    :return: Dictionary with the status and message
+    """
+    try:
+        table = dynamodb.Table(APPOINTMENTS_TABLE)
+        response = table.update_item(
+            Key={"appointmentId": appointment_id, "userId": user_id},
+            UpdateExpression="SET #status = :new_status",
+            ConditionExpression="#status = :current_status",
+            ExpressionAttributeNames={"#status": "status"},
+            ExpressionAttributeValues={":new_status": "finished", ":current_status": "scheduled"}
+        )
+        
+    except ClientError as e:
+        logger.error(f"Failed to delete item from DynamoDB: {e}")
+        return {"status": "error", "message": str(e)}
+    
+    return {"status": "success", "message": "Appointment finished successfully"}
+        
+def get_doctor_appointments(doctor_id: int) -> Dict[str, Any]:
+    """
+    Retrieve appointments for a specific doctor.
+
+    :param doctor_id: ID of the doctor (should be an integer if the attribute is of type Number)
+    :return: Dictionary with the status and list of appointments
+    """ 
+    try:
+        table = dynamodb.Table(APPOINTMENTS_TABLE)
+        response = table.query(
+            IndexName="doctorId-index",
+            KeyConditionExpression=Key("doctorId").eq(doctor_id)
+        )
+        appointments = response.get('Items', [])
+        return {"status": "success", "appointments": appointments}
+    except Exception as e:
+        logger.error(f"Failed to query items from DynamoDB: {e}")
+        return {"status": "error", "message": str(e)}
 
 def get_doctors() -> Dict[str, Any]:
     """

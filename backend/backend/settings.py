@@ -79,6 +79,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://frontend-v2.eba-6fgtpcwm.us-east-1.elasticbeanstalk.com",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+]
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [

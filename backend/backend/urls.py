@@ -3,8 +3,18 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
-from .views import LoginView, BookAppointmentView, ProcessPaymentView, AppointmentStatusView, UserAppointmentsView, DoctorsView, ClinicLoginView
 from . import views
+from .views import (
+    LoginView,
+    BookAppointmentView,
+    ProcessPaymentView,
+    AppointmentStatusView,
+    UserAppointmentsView,
+    DoctorsView,
+    ClinicLoginView,
+    FinishAppointmentView,
+    DoctorAppointmentsView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,6 +25,8 @@ urlpatterns = [
     path("user/appointments/", UserAppointmentsView.as_view(), name="user_appointments"),
     path("doctors/", DoctorsView.as_view(), name="doctors"),
     path("clinic/login/", ClinicLoginView.as_view(), name="clinic_login"),
+    path("appointments/finish/", FinishAppointmentView.as_view(), name="finish_appointment"),
+    path("doctors/<int:doctor_id>/appointments/", DoctorAppointmentsView.as_view(), name="doctor_appointments"),
     
     re_path(r'^.*$', TemplateView.as_view(template_name='index.html'), name='home'),
 ]

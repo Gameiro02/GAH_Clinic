@@ -8,6 +8,13 @@ export const appointmentsData = writable({
     errorMessage: ''
 });
 
+export const doctorsAppointments = writable({
+    upcomingAppointments: [],
+    pastAppointments: [],
+    isLoading: true,
+    errorMessage: ''
+});
+
 // Doctos data: doctor contains doctor id and doctor name
 export const doctorsData = writable({
     doctors: []

@@ -183,5 +183,35 @@ class ClinicLoginView(APIView):
             return create_error_response("No faces found in the image", status.HTTP_400_BAD_REQUEST)
         return create_error_response(message, status.HTTP_404_NOT_FOUND if message == "Unrecognized user" else status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+    
+class FinishAppointmentView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        appointment_id = request.data.get("appointmentId")
+        user_id = request.data.get("userId")
         
-                            
+        if not appointment_id:
+            return create_error_response("Appointment ID required", status.HTTP_400_BAD_REQUEST)
+        
+        result = aws_services.finish_appointment(appointment_id, user_id)
+                
+        if result["status"] == STATUS_SUCCESS:
+            return Response({"status": STATUS_SUCCESS, "message": "Appointment cancelled successfully"}, status=status.HTTP_200_OK)
+        else:
+            return create_error_response("Failed to cancel appointment", status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class DoctorAppointmentsView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request, doctor_id):
+        try:
+            result = aws_services.get_doctor_appointments(int(doctor_id))
+            if result["status"] == STATUS_SUCCESS:
+                return Response({"status": STATUS_SUCCESS, "appointments": result["appointments"]}, status=status.HTTP_200_OK)
+            else:
+                return create_error_response("Failed to retrieve appointments", status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            printf(f"Error retrieving appointments: {e}")
+            return create_error_response("Failed to retrieve appointments", status.HTTP_500_INTERNAL_SERVER_ERROR)
